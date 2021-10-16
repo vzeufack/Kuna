@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>View budget</title>
+	<th:block th:replace="fragments/header :: scripts"></th:block>
+</head>
+
+<body>
+	<div class="container">
+		<nav class="navbar navbar-expand-md navbar-dark bg-primary static-top">
+			<div class="collapse navbar-collapse">
+				<a class="navbar-brand" href="/">
+					<img src="/images/logo.png" alt="" style="height:45px;">
+				</a>
+				<div class="col">
+					<div class="nav navbar-nav navbar-center navbar-text h2" style="bottom:-10px" 
+					     th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></div>
+					<div class="nav navbar-nav navbar-center navbar-text h4" style="bottom:-40px; color:gold" 
+					     th:text="${#numbers.formatCurrency(budget.income)}"> </div>
+				</div>
+				<div class="navbar-nav ml-auto">
+					<a href="#" "btn btn-primary"><i class="fas fa-plus" style="font-size:25px; color:white;"></i></a>
+				</div>
+			</div>
+		</nav>
+	</div>
+</body>
+
+</html>

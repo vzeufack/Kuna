@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Budgets</title>
+	<th:block th:replace="fragments/header::scripts"></th:block>
+	<script th:inline="javascript">
+		$(function () {
+			$("td[id*='budget-']").click(function () {
+				var budgetId = $(this).prop('id').split('-')[1];
+				window.location.href = '/budget/view/' + budgetId;
+			});
+
+			$("button[id*='delete_budget_btn']").click(function () {
+				var budgetId = $(this).prop('id').split('_')[3];
+				window.location.href = '/budget/delete/' + budgetId;
+			});
+		});
+	</script>
+	<script type="text/javascript">
+	</script>
+</head>
+
+<body>
+	<div class="container">
+		<nav class="navbar navbar-expand-md navbar-dark bg-primary static-top">
+			<div class="collapse navbar-collapse">
+				<a class="navbar-brand" href="#">
+					<img src="/images/logo.png" alt="" style="height:45px;">
+				</a>
+				<div class="nav navbar-nav navbar-center navbar-text h2"> Budgets </div>
+				<div class="navbar-nav ml-auto">
+					<a href="/budget/create" "btn btn-primary"><i class="fas fa-plus"
+							style="font-size:25px; color:white;"></i></a>
+				</div>
+			</div>
+		</nav>
+
+		<table class="table table-striped" style="text-align: center;">
+			<tbody>
+				<tr th:each="budget : ${budgets}" style="cursor:pointer;">
+					<td th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|" th:id="|budget-${budget.id}|"></td>
+			      <td th:text="${#numbers.formatCurrency(budget.income)}"></td>
+			      <td th:text="${#numbers.formatCurrency(budget.balance)}"></td>
+			      <td>
+			      	<a th:href="@{/budget/edit/{budgetId} (budgetId = ${budget.id})}">
+			      		<i class="fas fa-edit" style="font-size:25px; color:cadetblue"></i>
+		      		</a>
+		      	</td>
+		    		<td>
+		    			<a type="button" data-toggle="modal" data-target='#delete-budget' th:attr="data-target='#delete-budget'+${budget.id}">
+		    				<i class="fas fa-trash" style="font-size:25px; color:orangered"></i>
+	    				</a>
+	    			</td>
+		    	
+		    		<div class="modal fade" th:id="delete-budget+${budget.id}" tabindex="-1" role="dialog" 
+		    		     aria-labelledby="deleteBudgetModal" aria-hidden="true">
+					  <div class="modal-dialog modal-dialog-centered" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h5 class="modal-title" id="exampleModalLongTitle">Delete Budget</h5>
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					      </div>
+					      <div class="modal-body">
+					        Are you sure you want to delete
+					        <span style="font-weight:bold" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"/> 
+					        budget?
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					        <button type="button" th:id = "|delete_budget_btn_${budget.id}|" class="btn btn-danger">Delete</button>
+					      </div>
+					    </div>
+					  </div>
+					</div>
+		    	</tr>
+			</tbody>
+		</table>	
+		
+		
+	</div>
+	
+		
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Edit budget</title>
+	<th:block th:replace="fragments/header :: scripts"></th:block>
+</head>
+
+<body>
+	<div class="container">
+		<nav class="navbar navbar-expand-md navbar-dark bg-primary static-top">
+			<div class="collapse navbar-collapse">
+				<a class="navbar-brand" href="/">
+					<img src="/images/logo.png" alt="" style="height:45px;">
+				</a>
+				<div class="nav navbar-nav navbar-center navbar-text h2"> Budget </div>
+				<div class="navbar-nav ml-auto">
+					<a href="#" "btn btn-primary"><i class="fas fa-plus" style="font-size:25px; color:white;"></i></a>
+				</div>
+			</div>
+		</nav>
+
+		<div class="col-sm-6 mx-auto" style="margin-top: 100px;">
+			<div class="card">
+				<div class="card-header h4" style="text-align: center;">Edit budget</div>
+				<div class="card-body">
+					<form method="POST" th:action="@{/budget/edit/{budgetId} (budgetId = ${budget.id})}" th:object="${budget}">
+						<div class="form-group">
+							<div class="row">
+								<div class="col">
+									<label for="month">Month</label>
+									<select class="form-control" id="month" name="month">
+										<option th:each="i : ${months}" th:value="${i}" 
+										        th:text="${#strings.capitalize(#strings.toLowerCase(i))}" th:selected="${i==currentMonth}"></option>
+								   </select>
+							    </div>
+							    <div class="col">
+							    	<label for="year">Year</label>
+							    	<select class="form-control" id="year" name = "year">							      
+									    <option th:each="i : ${#numbers.sequence(budget.year - 10, budget.year + 10)}" 
+									            th:value="${i}" th:text="${i}" th:selected="${i==currentYear}"></option>
+								   </select>
+							    </div>
+						    </div>
+						</div>
+						<div class="form-group">
+							<label for="income">Income</label>
+							<input type="number" class="form-control" th:field="*{income}" placeholder="0.00">
+							<div class="alert alert-warning" th:if="${#fields.hasErrors('income')}" th:errors="*{income}" 
+							     th:text="${#numbers.formatCurrency(budget.income)}"></div>
+						</div>
+						<div class="form-group" style="text-align: center; margin-top:40px">
+							<a href="/budget/list"><button type="button" class="btn btn-secondary col-md-3">Cancel</button></a>
+							<button type="submit" class="btn btn-primary col-md-3 ml-auto">Submit</button>
+						</div>
+						<div class="alert alert-warning" style="text-align:center" th:if="${isDuplicate == true}">
+					        <span style="font-weight:bold" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"/> 
+					        budget already exists!
+					   </div>
+					</form>
+  				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
