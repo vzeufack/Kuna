@@ -29,9 +29,8 @@
 							<div class="row">
 								<div class="col">
 									<label for="month">Month</label>
-								   <select class="form-control" id="month" name="month">
-										<option th:each="i : ${months}" th:value="${i}" 
-										        th:text="${#strings.capitalize(#strings.toLowerCase(i))}" th:selected="${i==currentMonth}">
+									<select class="form-control" id="month" name="month">
+										<option th:each="i : ${months}" th:value="${i}" th:text="${#strings.capitalize(#strings.toLowerCase(i))}" th:selected="${i==currentMonth}">
 										</option>
 								   </select>
 							    </div>

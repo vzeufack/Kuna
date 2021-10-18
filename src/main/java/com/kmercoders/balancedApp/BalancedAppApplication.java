@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BalancedAppApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BalancedAppApplication.class, args);
-	}
+   public static void main(String[] args) {
+      SpringApplication.run(BalancedAppApplication.class, args);
+   }
 }

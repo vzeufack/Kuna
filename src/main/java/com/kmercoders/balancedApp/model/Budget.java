@@ -12,64 +12,65 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @Entity
-@Table(name = "Budget",
-	    uniqueConstraints = @UniqueConstraint(columnNames={"month", "year"}))
+@Table(name = "Budget", uniqueConstraints = @UniqueConstraint(columnNames = { "month", "year" }))
 public class Budget {
-	@Id
-	@GeneratedValue
-	private Long id;
-	
-	private Month month;
-	private int year;
-	
-	@NotNull(message = "Please provide an income")
-	@Positive
-	private BigDecimal income;
-	
-	private BigDecimal balance;
+   @Id
+   @GeneratedValue
+   private Long id;
 
-	public Budget() {this.balance = BigDecimal.ZERO;}
-	
-	public Budget(Month month, int year, BigDecimal income) {
-		this.month = month;
-		this.year = year;
-		this.income = income;
-		this.balance = BigDecimal.ZERO;
-	}
-	
-	public Long getId() {
-		return id;
-	}
+   private Month month;
+   private int year;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+   @NotNull(message = "Please provide an income")
+   @Positive
+   private BigDecimal income;
 
-	public BigDecimal getIncome() {
-		return income;
-	}
-	
-	public void setIncome(BigDecimal income) {
-		this.income = income;
-	}
+   private BigDecimal balance;
 
-	public Month getMonth() {
-		return month;
-	}
+   public Budget() {
+      this.balance = BigDecimal.ZERO;
+   }
 
-	public void setMonth(Month month) {
-		this.month = month;
-	}
+   public Budget(Month month, int year, BigDecimal income) {
+      this.month = month;
+      this.year = year;
+      this.income = income;
+      this.balance = BigDecimal.ZERO;
+   }
 
-	public int getYear() {
-		return year;
-	}
+   public Long getId() {
+      return id;
+   }
 
-	public void setYear(int year) {
-		this.year = year;
-	}
+   public void setId(Long id) {
+      this.id = id;
+   }
 
-	public BigDecimal getBalance() {
-		return balance;
-	}
+   public BigDecimal getIncome() {
+      return income;
+   }
+
+   public void setIncome(BigDecimal income) {
+      this.income = income;
+   }
+
+   public Month getMonth() {
+      return month;
+   }
+
+   public void setMonth(Month month) {
+      this.month = month;
+   }
+
+   public int getYear() {
+      return year;
+   }
+
+   public void setYear(int year) {
+      this.year = year;
+   }
+
+   public BigDecimal getBalance() {
+      return balance;
+   }
 }

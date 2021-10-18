@@ -24,14 +24,14 @@
 			<div class="card">
 				<div class="card-header h4" style="text-align: center;">Edit budget</div>
 				<div class="card-body">
-					<form method="POST" th:action="@{/budget/edit/{budgetId} (budgetId = ${budget.id})}" th:object="${budget}">
+					<form method="POST" th:action="@{/budget/edit/{budgetId} (budgetId = ${budget.id})}"
+						th:object="${budget}">
 						<div class="form-group">
 							<div class="row">
 								<div class="col">
 									<label for="month">Month</label>
 									<select class="form-control" id="month" name="month">
-										<option th:each="i : ${months}" th:value="${i}" 
-										        th:text="${#strings.capitalize(#strings.toLowerCase(i))}" th:selected="${i==currentMonth}"></option>
+										<option th:each="i : ${months}" th:value="${i}" th:text="${#strings.capitalize(#strings.toLowerCase(i))}" th:selected="${i==currentMonth}"></option>
 								   </select>
 							    </div>
 							    <div class="col">

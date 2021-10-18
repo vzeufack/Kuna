@@ -10,22 +10,22 @@ import com.kmercoders.balancedApp.repositories.BudgetRepository;
 
 @Service
 public class BudgetService {
-	@Autowired
-	private BudgetRepository budgetRepo;
-	
-	public Budget save(Budget budget) {
-		return budgetRepo.save(budget);	
-	}
-	
-	public Optional<Budget> findById(Long budgetId) {
-   	return budgetRepo.findById(budgetId);
+   @Autowired
+   private BudgetRepository budgetRepo;
+
+   public Budget save(Budget budget) {
+      return budgetRepo.save(budget);
    }
 
-	public List<Budget> findAll() {
-		return budgetRepo.findAll();
-	}
-	
-	public void delete(Long budgetId) {
-		budgetRepo.deleteById(budgetId);
-  }
+   public Optional<Budget> findById(Long budgetId) {
+      return budgetRepo.findById(budgetId);
+   }
+
+   public List<Budget> findAll() {
+      return budgetRepo.findAll();
+   }
+
+   public void delete(Long budgetId) {
+      budgetRepo.deleteById(budgetId);
+   }
 }

@@ -14,8 +14,7 @@
 					<img src="/images/logo.png" alt="" style="height:45px;">
 				</a>
 				<div class="col">
-					<div class="nav navbar-nav navbar-center navbar-text h2" style="bottom:-10px" 
-					     th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></div>
+					<div class="nav navbar-nav navbar-center navbar-text h2" style="bottom:-10px" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></div>
 					<div class="nav navbar-nav navbar-center navbar-text h4" style="bottom:-40px; color:gold" 
 					     th:text="${#numbers.formatCurrency(budget.income)}"> </div>
 				</div>
