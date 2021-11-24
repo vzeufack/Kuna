@@ -4,6 +4,16 @@
 <head>
 	<title>View budget</title>
 	<th:block th:replace="fragments/header :: scripts"></th:block>
+	<script th:inline="javascript">
+		$(function () {
+			$("button[id*='delete_group_btn']").click(function () {
+				var splittedId = $(this).prop('id').split('_');
+				var budgetId = splittedId[3];
+				var groupId = splittedId[4];
+				window.location.href = '/budget/' + budgetId + '/group/delete/' + groupId;
+			});
+		});
+	</script>
 </head>
 
 <body>
@@ -23,7 +33,59 @@
 				</div>
 			</div>
 		</nav>
+		<div>
+			<ul class="nav justify-content-end navbar-light" >
+			  <li class="nav-item">
+			    <a type="button" class="btn" style = "font-weight:bold" th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}">+ Group</a>
+			  </li>
+			  <li class="nav-item">
+			    <a type="button" class="btn" style = "font-weight:bold" href="#">+ Category</a>
+			  </li>
+			</ul>
+		</div>
+		<div class="card" th:each="group : ${budget.groups}" style="margin-top:3px">
+		  <div class="card-header">
+		  	 <a th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}">
+	   		 <i class="fas fa-edit" style="font-size:20px; color:cadetblue; margin-right:3px"></i>
+			 </a>
+		    <span th:text="${group.name}"></span>
+		    <a type="button" data-toggle="modal" data-target='#delete-group' th:attr="data-target='#delete-group'+${group.id}" style = "float:right">
+ 				<i class="fas fa-trash" style="font-size:20px; color:orangered"></i>
+			</a>
+		  </div>
+		  <div class="card-body">
+		    <h5 class="card-title">Special title treatment</h5>
+		    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+		    <a href="#" class="btn btn-primary">Go somewhere</a>
+		  </div>
+		  
+		  <div class="modal fade" th:id="delete-group+${group.id}" tabindex="-1" role="dialog" 
+	          aria-labelledby="deleteGroupModal" aria-hidden="true">
+			  <div class="modal-dialog modal-dialog-centered" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <h5 class="modal-title" id="exampleModalLongTitle">Delete Group</h5>
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			          <span aria-hidden="true">&times;</span>
+			        </button>
+			      </div>
+			      <div class="modal-body">
+			        Are you sure you want to delete
+			        <span style="font-weight:bold" th:text="${group.name}|"/> 
+			        group?
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			        <button type="button" th:id = "|delete_group_btn_${budgetId}_${group.id}|" class="btn btn-danger">Delete</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+		  
+		</div>
 	</div>
+	
+	
 </body>
 
 </html>

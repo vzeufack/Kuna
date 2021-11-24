@@ -2,17 +2,23 @@ package com.kmercoders.balancedApp.model;
 
 import java.math.BigDecimal;
 import java.time.Month;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 @Entity
-@Table(name = "Budget", uniqueConstraints = @UniqueConstraint(columnNames = { "month", "year" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "month", "year" }))
 public class Budget {
    @Id
    @GeneratedValue
@@ -20,6 +26,10 @@ public class Budget {
 
    private Month month;
    private int year;
+   
+   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "budget")
+   @OrderBy("name ASC")
+   private Set<Group> groups = new HashSet<>();
 
    @NotNull(message = "Please provide an income")
    @Positive
@@ -72,5 +82,13 @@ public class Budget {
 
    public BigDecimal getBalance() {
       return balance;
+   }
+   
+   public Set<Group> getGroups() {
+       return groups;
+   }
+
+   public void setGroups(HashSet<Group> groups) {
+       this.groups = groups;
    }
 }
