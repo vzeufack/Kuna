@@ -4,6 +4,6 @@ Personal budgeting app to keep track of expenses. The app will allow to plan, ad
 ## Functionalities
 - [x] Budget CRUD (Create Read Update Delete)
 - [x] Group CRUD
-- [ ] Category CRUD
+- [x] Category CRUD
 - [ ] Transaction CRUD
 - [ ] Balance Computation

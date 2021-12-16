@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.Month;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -29,7 +30,7 @@ public class Budget {
    
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "budget")
    @OrderBy("name ASC")
-   private Set<Group> groups = new HashSet<>();
+   private Set<Group> groups = new TreeSet<>();
 
    @NotNull(message = "Please provide an income")
    @Positive

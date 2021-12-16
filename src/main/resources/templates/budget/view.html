@@ -12,11 +12,20 @@
 				var groupId = splittedId[4];
 				window.location.href = '/budget/' + budgetId + '/group/delete/' + groupId;
 			});
+			
+			$("button[id*='delete_category_btn']").click(function () {
+				var splittedId = $(this).prop('id').split('_');
+				var budgetId = splittedId[3];
+				var groupId = splittedId[4];
+				var categoryId = splittedId[5];
+				window.location.href = '/budget/' + budgetId + '/group/' + groupId + '/category/delete/' + categoryId;
+			});
 		});
 	</script>
 </head>
 
 <body>
+	<!--<div style="margin-left:5%; margin-right:5%">-->
 	<div class="container">
 		<nav class="navbar navbar-expand-md navbar-dark bg-primary static-top">
 			<div class="collapse navbar-collapse">
@@ -29,34 +38,84 @@
 					     th:text="${#numbers.formatCurrency(budget.income)}"> </div>
 				</div>
 				<div class="navbar-nav ml-auto">
-					<a href="#" "btn btn-primary"><i class="fas fa-plus" style="font-size:25px; color:white;"></i></a>
+					<a th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" "btn btn-primary"><i class="fas fa-plus" style="font-size:25px; color:white;"></i></a>
 				</div>
 			</div>
 		</nav>
-		<div>
-			<ul class="nav justify-content-end navbar-light" >
-			  <li class="nav-item">
-			    <a type="button" class="btn" style = "font-weight:bold" th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}">+ Group</a>
-			  </li>
-			  <li class="nav-item">
-			    <a type="button" class="btn" style = "font-weight:bold" href="#">+ Category</a>
-			  </li>
-			</ul>
-		</div>
 		<div class="card" th:each="group : ${budget.groups}" style="margin-top:3px">
 		  <div class="card-header">
-		  	 <a th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}">
-	   		 <i class="fas fa-edit" style="font-size:20px; color:cadetblue; margin-right:3px"></i>
-			 </a>
-		    <span th:text="${group.name}"></span>
-		    <a type="button" data-toggle="modal" data-target='#delete-group' th:attr="data-target='#delete-group'+${group.id}" style = "float:right">
- 				<i class="fas fa-trash" style="font-size:20px; color:orangered"></i>
-			</a>
+		  	 <span style="font-weight:bold; font-size:25px" th:text="${#strings.capitalize(#strings.toLowerCase(group.name))}"></span>
+		  	 <div style = "float:right; font-size:20px;">
+			  	 <a th:href="@{/budget/{budgetId}/group/{groupId}/category/create (budgetId = ${budget.id}, groupId = ${group.id})}">
+			  	 	<i class="fas fa-plus" style="color:green; margin-right:6px">
+			  	 	</i>
+			  	 </a>
+			  	 <a th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}">
+		   		 <i class="fas fa-edit" style="color:cadetblue; margin-right:6px"></i>
+				 </a>
+			    
+			    <a type="button" data-toggle="modal" th:attr="data-target='#delete-group'+${group.id}">
+	 				<i class="fas fa-trash" style="color:orangered"></i>
+				</a>
+			 </div>
 		  </div>
 		  <div class="card-body">
-		    <h5 class="card-title">Special title treatment</h5>
-		    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-		    <a href="#" class="btn btn-primary">Go somewhere</a>
+		    <div class="card" th:each="category : ${group.categories}">
+		    	<div class="card-header">
+		    	  <div class = "row">
+			    	  <div class="col-sm-2">
+						  <a data-toggle="collapse" th:href="|#collapse${category.id}|" role="button" aria-expanded="false" aria-controls="|collapse${category.id}|">
+						    <span th:text="${#strings.capitalize(#strings.toLowerCase(category.name))}"></span>
+						  </a>
+					  </div>
+					  <div class="col-sm-1">
+					  	 <span th:text="${#numbers.formatCurrency(category.allocation)}"></span>
+					  </div>
+					  <div class="col-sm-9 text-right" style = "float:right; font-size:15px;">
+					  	 <a th:href="@{/budget/{budgetId}/group/{groupId}/category/create (budgetId = ${budget.id}, groupId = ${group.id})}">
+					  	 	<i class="fas fa-plus" style="color:green; margin-right:6px">
+					  	 	</i>
+					  	 </a>
+					  	 <a th:href="@{/budget/{budgetId}/group/{groupId}/category/edit/{categoryId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
+				   		 <i class="fas fa-edit" style="color:cadetblue; margin-right:6px"></i>
+						 </a>
+					    
+					    <a type="button" data-toggle="modal" th:attr="data-target='#delete-category'+${category.id}">
+			 				<i class="fas fa-trash" style="color:orangered"></i>
+						</a>
+					 </div>
+				 </div>
+				</div>
+				<div class="collapse" th:id="|collapse${category.id}|">
+				  <div class="card-body">
+				    <span th:text="${category.name}"></span>
+				  </div>
+				</div>
+				
+				<div class="modal fade" th:id="delete-category+${category.id}" tabindex="-1" role="dialog" 
+	          aria-labelledby="deleteCategoryModal" aria-hidden="true">
+				  <div class="modal-dialog modal-dialog-centered" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="exampleModalLongTitle">Delete Category</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				        Are you sure you want to delete
+				        <span style="font-weight:bold" th:text="${category.name}|"/> 
+				        category?
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				        <button type="button" th:id = "|delete_category_btn_${budgetId}_${group.id}_${category.id}|" class="btn btn-danger">Delete</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+			
+			 </div>
 		  </div>
 		  
 		  <div class="modal fade" th:id="delete-group+${group.id}" tabindex="-1" role="dialog" 
@@ -83,9 +142,7 @@
 			</div>
 		  
 		</div>
-	</div>
-	
-	
+	</div>	
 </body>
 
 </html>

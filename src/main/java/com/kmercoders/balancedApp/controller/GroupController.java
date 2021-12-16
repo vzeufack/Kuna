@@ -29,20 +29,24 @@ public class GroupController {
    @GetMapping(value = "create")
    public String showGroupCreationForm(ModelMap model, @PathVariable Long budgetId) {
       Group group = new Group();
+      Budget budget = budgetService.findById(budgetId).get();
+      
       model.put("group", group);
-      model.addAttribute("budgetId", budgetId);
+      model.addAttribute("budget", budget);
       return "group/create";
    }
    
    @PostMapping(value = "create")
    public String createGroup(ModelMap model, @ModelAttribute("group") @Valid Group group, BindingResult result, @PathVariable Long budgetId) {
+      Budget budget = budgetService.findById(budgetId).get();
+      
       if (result.hasErrors()) {
          model.addAttribute("group", group);
-         model.addAttribute("budgetId", budgetId);
+         model.addAttribute("budget", budget);
          return "group/create";
       }
       
-      Budget budget = budgetService.findById(budgetId).get();
+      
       group.setBudget(budget);
       groupService.save(group);
       return "redirect:/budget/view/" + budgetId;
@@ -51,8 +55,11 @@ public class GroupController {
    @GetMapping(value = "edit/{groupId}")
    public String showEditGroupForm(ModelMap model, @PathVariable Long groupId, @PathVariable Long budgetId) {
       Group group = groupService.findById(groupId).get();
+      Budget budget = budgetService.findById(budgetId).get();
+      
       model.addAttribute("group", group);
-      model.addAttribute("budgetId", budgetId);
+      model.addAttribute("budget", budget);
+      
       return "group/edit";
    }
    
@@ -60,11 +67,12 @@ public class GroupController {
    public String updateGroup(ModelMap model, @ModelAttribute("group") @Valid Group group, BindingResult result,
          @PathVariable Long groupId, @PathVariable Long budgetId) {
       Group groupFromDB = groupService.findById(groupId).get();
+      Budget budget = budgetService.findById(budgetId).get();
 
       if (result.hasErrors()) {
          group.setId(groupId);
          model.addAttribute("group", group);
-         model.addAttribute("budgetId", budgetId);
+         model.addAttribute("budget", budget);
          return "group/edit";
       }
       
