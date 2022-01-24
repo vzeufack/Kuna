@@ -1,5 +1,6 @@
 package com.kmercoders.balancedApp.controller;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.kmercoders.balancedApp.model.Budget;
+import com.kmercoders.balancedApp.model.Category;
+import com.kmercoders.balancedApp.model.Group;
+import com.kmercoders.balancedApp.model.Transaction;
 import com.kmercoders.balancedApp.service.BudgetService;
 
 @Controller
@@ -63,7 +67,19 @@ public class BudgetController {
    @GetMapping(value = "view/{budgetId}")
    public String showBudget(ModelMap model, @PathVariable Long budgetId) {
       Budget budget = budgetService.findById(budgetId).get();
+      
+      BigDecimal totalSpent = BigDecimal.ZERO;
+      for(Group group: budget.getGroups()) {
+         for(Category category: group.getCategories()) {
+            for(Transaction transaction: category.getTransactions()) {
+               totalSpent = totalSpent.add(transaction.getAmount());
+            }
+         }
+      }
+      
       model.put("budget", budget);
+      model.addAttribute("totalSpent", totalSpent);
+      model.addAttribute("remaining", budget.getIncome().subtract(totalSpent));
 
       return "budget/view";
    }

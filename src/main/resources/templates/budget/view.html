@@ -20,8 +20,27 @@
 				var categoryId = splittedId[5];
 				window.location.href = '/budget/' + budgetId + '/group/' + groupId + '/category/delete/' + categoryId;
 			});
+			
+			$("button[id*='delete_transaction_btn']").click(function () {
+				var splittedId = $(this).prop('id').split('_');
+				var budgetId = splittedId[3];
+				var groupId = splittedId[4];
+				var categoryId = splittedId[5];
+				var transactionId = splittedId[6];
+				window.location.href = '/budget/' + budgetId + '/group/' + groupId + '/category/' + categoryId + '/transaction/delete/' + transactionId;
+			});
 		});
 	</script>
+	
+	<style>
+		.note {
+		  display: block;
+		  width: 600px;
+		  overflow: hidden;
+		  white-space: nowrap;
+		  text-overflow: ellipsis;
+		}
+	</style>
 </head>
 
 <body>
@@ -42,15 +61,22 @@
 				</div>
 			</div>
 		</nav>
+		<div>
+			<ul class="h6">
+			  <li class="list-item">Income: <span th:text="${#numbers.formatCurrency(budget.income)}"> </span></li>
+			  <li class="list-item">Spent: <span th:text="${#numbers.formatCurrency(totalSpent)}"> </span></li>
+			  <li class="list-item">Remaining: <span th:text="${#numbers.formatCurrency(remaining)}"> </span></li>
+			</ul>
+		</div>
 		<div class="card" th:each="group : ${budget.groups}" style="margin-top:3px">
 		  <div class="card-header">
 		  	 <span style="font-weight:bold; font-size:25px" th:text="${#strings.capitalize(#strings.toLowerCase(group.name))}"></span>
 		  	 <div style = "float:right; font-size:20px;">
-			  	 <a th:href="@{/budget/{budgetId}/group/{groupId}/category/create (budgetId = ${budget.id}, groupId = ${group.id})}">
+			  	 <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/create (budgetId = ${budget.id}, groupId = ${group.id})}">
 			  	 	<i class="fas fa-plus" style="color:green; margin-right:6px">
 			  	 	</i>
 			  	 </a>
-			  	 <a th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}">
+			  	 <a type="button" th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}">
 		   		 <i class="fas fa-edit" style="color:cadetblue; margin-right:6px"></i>
 				 </a>
 			    
@@ -68,15 +94,15 @@
 						    <span th:text="${#strings.capitalize(#strings.toLowerCase(category.name))}"></span>
 						  </a>
 					  </div>
-					  <div class="col-sm-1">
+					  <div class="col-sm-3">
 					  	 <span th:text="${#numbers.formatCurrency(category.allocation)}"></span>
 					  </div>
-					  <div class="col-sm-9 text-right" style = "float:right; font-size:15px;">
-					  	 <a th:href="@{/budget/{budgetId}/group/{groupId}/category/create (budgetId = ${budget.id}, groupId = ${group.id})}">
+					  <div class="col-sm-7 text-right" style = "float:right; font-size:15px;">
+					  	 <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/create (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
 					  	 	<i class="fas fa-plus" style="color:green; margin-right:6px">
 					  	 	</i>
 					  	 </a>
-					  	 <a th:href="@{/budget/{budgetId}/group/{groupId}/category/edit/{categoryId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
+					  	 <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/edit/{categoryId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
 				   		 <i class="fas fa-edit" style="color:cadetblue; margin-right:6px"></i>
 						 </a>
 					    
@@ -88,7 +114,53 @@
 				</div>
 				<div class="collapse" th:id="|collapse${category.id}|">
 				  <div class="card-body">
-				    <span th:text="${category.name}"></span>
+					    <table class="table table-striped">
+						    <!--<thead>
+							    <tr>
+							      <th scope="col">Date</th>
+							      <th scope="col">Amount</th>
+							      <th scope="col">Notes</th>
+							    </tr>
+						    </thead>-->
+						  	<tbody>				    	
+						    	<tr th:each="transaction: ${category.transactions}" style="cursor:pointer;" th:id="|transaction-${transaction.id}|">
+							      <td style="width:1%">
+							         <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/edit/{tranId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id}, tranId = ${transaction.id})}">
+							   		 	<i class="fas fa-edit" style="color:cadetblue; margin-right:6px"></i>
+								 		 </a>
+									</td>
+							      <td style="width:15%" th:text="${#temporals.format(transaction.date, 'YYYY-MMM-dd')}"></td>
+							      <td style="width:15%" th:text="${#numbers.formatCurrency(transaction.amount)}"></td>
+							      <td class = "note" th:text="${transaction.note}"></td>
+							      <td style="width:1%">
+							      	<a type="button" data-toggle="modal" th:attr="data-target='#delete-transaction'+${transaction.id}">
+							 				<i class="fas fa-trash" style="color:orangered"></i>
+										</a>
+							      </td>
+							      
+							      <div class="modal fade" th:id="delete-transaction+${transaction.id}" tabindex="-1" role="dialog" 
+						          aria-labelledby="deleteTransactionModal" aria-hidden="true">
+									  <div class="modal-dialog modal-dialog-centered" role="document">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <h5 class="modal-title" id="exampleModalLongTitle">Delete Transaction</h5>
+									        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									          <span aria-hidden="true">&times;</span>
+									        </button>
+									      </div>
+									      <div class="modal-body">
+									        Are you sure you want to delete this transaction?
+									      </div>
+									      <div class="modal-footer">
+									        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									        <button type="button" th:id = "|delete_transaction_btn_${budgetId}_${group.id}_${category.id}_${transaction.id}|" class="btn btn-danger">Delete</button>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+						    	</tr>
+							</tbody>
+						</table>
 				  </div>
 				</div>
 				
