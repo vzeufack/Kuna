@@ -51,22 +51,28 @@
 				<a class="navbar-brand" href="/">
 					<img src="/images/logo.png" alt="" style="height:45px;">
 				</a>
-				<div class="col">
-					<div class="nav navbar-nav navbar-center navbar-text h2" style="bottom:-10px" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></div>
-					<div class="nav navbar-nav navbar-center navbar-text h4" style="bottom:-40px; color:gold" 
-					     th:text="${#numbers.formatCurrency(budget.income)}"> </div>
+				<div>
+					<div class="nav navbar-nav navbar-center navbar-text h2" style="bottom:25px" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></div>
+					<div class="nav navbar-nav navbar-center navbar-text h4" style="bottom:-5px; color:gold" 
+					     th:text="|Income: ${#numbers.formatCurrency(budget.getTotalIncome())} / Planned: ${#numbers.formatCurrency(budget.getTotalPlanned())}|"> </div>
 				</div>
 				<div class="navbar-nav ml-auto">
 					<a th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" "btn btn-primary"><i class="fas fa-plus" style="font-size:25px; color:white;"></i></a>
 				</div>
 			</div>
 		</nav>
-		<div>
-			<ul class="h6">
-			  <li class="list-item">Income: <span th:text="${#numbers.formatCurrency(budget.income)}"> </span></li>
-			  <li class="list-item">Spent: <span th:text="${#numbers.formatCurrency(totalSpent)}"> </span></li>
-			  <li class="list-item">Remaining: <span th:text="${#numbers.formatCurrency(remaining)}"> </span></li>
-			</ul>
+		<div style = "margin-top:5px; font-weight:bold">			
+			<table style="width: 100%; margin-left: auto; margin-right: auto;">
+				<tr>
+			      <td th:text="|Spent: ${#numbers.formatCurrency(budget.getTotalSpent())}|" style="text-align: left;"></td>
+			      <td th:text="|Remainder: ${#numbers.formatCurrency(budget.getTotalRemaining())}|" style="text-align: right;"></td>
+			    </tr>
+			</table>
+		</div>
+		
+		<div class="progress" style = "margin-bottom:10px">
+		  <div class="progress-bar bg-info" role="progressbar"  aria-valuenow="25" 
+		  	th:style="|width: ${budget.getPercentSpent()}%|" aria-valuemin="0" aria-valuemax="100"></div>
 		</div>
 		<div class="card" th:each="group : ${budget.groups}" style="margin-top:3px">
 		  <div class="card-header">
@@ -76,11 +82,11 @@
 			  	 	<i class="fas fa-plus" style="color:green; margin-right:6px">
 			  	 	</i>
 			  	 </a>
-			  	 <a type="button" th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}">
+			  	 <a type="button" th:if="${group.name} != 'income'" th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}">
 		   		 <i class="fas fa-edit" style="color:cadetblue; margin-right:6px"></i>
 				 </a>
 			    
-			    <a type="button" data-toggle="modal" th:attr="data-target='#delete-group'+${group.id}">
+			    <a type="button" data-toggle="modal" th:if="${group.name} != 'income'"  th:attr="data-target='#delete-group'+${group.id}">
 	 				<i class="fas fa-trash" style="color:orangered"></i>
 				</a>
 			 </div>
@@ -89,15 +95,19 @@
 		    <div class="card" th:each="category : ${group.categories}">
 		    	<div class="card-header">
 		    	  <div class = "row">
-			    	  <div class="col-sm-2">
+			    	  <div class="col-sm-4" style="font-weight:bold">
 						  <a data-toggle="collapse" th:href="|#collapse${category.id}|" role="button" aria-expanded="false" aria-controls="|collapse${category.id}|">
-						    <span th:text="${#strings.capitalize(#strings.toLowerCase(category.name))}"></span>
+						    <span th:text="|${#strings.capitalize(#strings.toLowerCase(category.name))} (${#numbers.formatCurrency(category.allocation)})|"></span>
 						  </a>
 					  </div>
-					  <div class="col-sm-3">
-					  	 <span th:text="${#numbers.formatCurrency(category.allocation)}"></span>
+					  <div class="col-sm-4" style="font-weight:bold">
+					  	 <!--<span th:if="${group.name == 'income'}">Earned:</span>
+					  	 <span th:if="${group.name != 'income'}">Spent:</span>
+					  	 <span th:text="|${#numbers.formatCurrency(category.getTotalSpent)}"></span>
+					  	 <span>|</span>-->
+					  	 <span th:text="|Remainder: ${#numbers.formatCurrency(category.getRemaining)}|"></span>
 					  </div>
-					  <div class="col-sm-7 text-right" style = "float:right; font-size:15px;">
+					  <div class="col-sm-4 text-right" style = "float:right; font-size:15px;">
 					  	 <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/create (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
 					  	 	<i class="fas fa-plus" style="color:green; margin-right:6px">
 					  	 	</i>
@@ -115,13 +125,6 @@
 				<div class="collapse" th:id="|collapse${category.id}|">
 				  <div class="card-body">
 					    <table class="table table-striped">
-						    <!--<thead>
-							    <tr>
-							      <th scope="col">Date</th>
-							      <th scope="col">Amount</th>
-							      <th scope="col">Notes</th>
-							    </tr>
-						    </thead>-->
 						  	<tbody>				    	
 						    	<tr th:each="transaction: ${category.transactions}" style="cursor:pointer;" th:id="|transaction-${transaction.id}|">
 							      <td style="width:1%">

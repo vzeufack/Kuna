@@ -1,8 +1,8 @@
 package com.kmercoders.balancedApp.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Month;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -15,8 +15,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "month", "year" }))
@@ -29,24 +27,14 @@ public class Budget {
    private int year;
    
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "budget")
-   @OrderBy("name ASC")
+   @OrderBy("id ASC")
    private Set<Group> groups = new TreeSet<>();
-
-   @NotNull(message = "Please provide an income")
-   @Positive
-   private BigDecimal income;
-
-   private BigDecimal balance;
-
-   public Budget() {
-      this.balance = BigDecimal.ZERO;
-   }
+   
+   public Budget() {}
 
    public Budget(Month month, int year, BigDecimal income) {
       this.month = month;
       this.year = year;
-      this.income = income;
-      this.balance = BigDecimal.ZERO;
    }
 
    public Long getId() {
@@ -55,14 +43,6 @@ public class Budget {
 
    public void setId(Long id) {
       this.id = id;
-   }
-
-   public BigDecimal getIncome() {
-      return income;
-   }
-
-   public void setIncome(BigDecimal income) {
-      this.income = income;
    }
 
    public Month getMonth() {
@@ -80,16 +60,62 @@ public class Budget {
    public void setYear(int year) {
       this.year = year;
    }
-
-   public BigDecimal getBalance() {
-      return balance;
-   }
    
    public Set<Group> getGroups() {
        return groups;
    }
 
-   public void setGroups(HashSet<Group> groups) {
+   public void setGroups(TreeSet<Group> groups) {
        this.groups = groups;
+   }
+   
+   public BigDecimal getTotalIncome() {
+      BigDecimal totalIncome = BigDecimal.ZERO;
+      Set<Group> groups = getGroups();
+      
+      for(Group group: groups) {
+         if(group.getName().equalsIgnoreCase("income")) {
+            totalIncome = group.getTotalAllocation();
+         }  
+      }
+      
+      return totalIncome;
+   }
+   
+   public BigDecimal getTotalPlanned() {
+      BigDecimal totalPlanned = BigDecimal.ZERO;
+      Set<Group> groups = getGroups();
+      
+      for(Group group: groups) {
+         if(!group.getName().equalsIgnoreCase("income"))
+            totalPlanned = totalPlanned.add(group.getTotalAllocation());
+      }
+      
+      return totalPlanned;
+   }
+   
+   public BigDecimal getTotalUnplanned() {
+      return getTotalIncome().subtract(getTotalPlanned());
+   }
+   
+   
+   public BigDecimal getTotalSpent() {
+      BigDecimal totalSpent = BigDecimal.ZERO;
+      Set<Group> groups = getGroups();
+      
+      for(Group group: groups) {
+         if(!group.getName().equalsIgnoreCase("income"))
+            totalSpent = totalSpent.add(group.getTotalSpent());
+      }
+      
+      return totalSpent; 
+   }
+   
+   public BigDecimal getTotalRemaining() {
+      return getTotalIncome().subtract(getTotalSpent());
+   }
+   
+   public double getPercentSpent() {
+      return getTotalSpent().multiply(new BigDecimal(100)).divide(getTotalIncome(), 10, RoundingMode.HALF_UP).doubleValue();   
    }
 }

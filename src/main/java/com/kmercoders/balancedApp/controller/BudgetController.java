@@ -1,9 +1,10 @@
 package com.kmercoders.balancedApp.controller;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.validation.Valid;
 
@@ -20,14 +21,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.kmercoders.balancedApp.model.Budget;
 import com.kmercoders.balancedApp.model.Category;
 import com.kmercoders.balancedApp.model.Group;
-import com.kmercoders.balancedApp.model.Transaction;
 import com.kmercoders.balancedApp.service.BudgetService;
+import com.kmercoders.balancedApp.service.GroupService;
 
 @Controller
 @RequestMapping(value = { "/budget", "/" })
 public class BudgetController {
    @Autowired
    private BudgetService budgetService;
+   
+   @Autowired
+   private GroupService groupService;
+  
 
    @GetMapping(value = { "list", "" })
    public String showBudgets(ModelMap model) {
@@ -55,8 +60,14 @@ public class BudgetController {
       }
 
       try {
+         if(budgetService.findAll().isEmpty())
+            addDefaultGroups(budget);
+         else
+            copyGroupsFromLastBudget(budget);
+         
          budgetService.save(budget);
       } catch (Exception e) {
+         e.printStackTrace();
          feedModel(model, budget);
          model.addAttribute("isDuplicate", true);
          return "budget/create";
@@ -66,21 +77,9 @@ public class BudgetController {
 
    @GetMapping(value = "view/{budgetId}")
    public String showBudget(ModelMap model, @PathVariable Long budgetId) {
-      Budget budget = budgetService.findById(budgetId).get();
-      
-      BigDecimal totalSpent = BigDecimal.ZERO;
-      for(Group group: budget.getGroups()) {
-         for(Category category: group.getCategories()) {
-            for(Transaction transaction: category.getTransactions()) {
-               totalSpent = totalSpent.add(transaction.getAmount());
-            }
-         }
-      }
-      
+      Budget budget = budgetService.findById(budgetId).get();      
       model.put("budget", budget);
-      model.addAttribute("totalSpent", totalSpent);
-      model.addAttribute("remaining", budget.getIncome().subtract(totalSpent));
-
+      
       return "budget/view";
    }
 
@@ -104,7 +103,6 @@ public class BudgetController {
          return "budget/edit";
       }
 
-      budgetFromDB.setIncome(budget.getIncome());
       budgetFromDB.setMonth(budget.getMonth());
       budgetFromDB.setYear(budget.getYear());
 
@@ -130,5 +128,67 @@ public class BudgetController {
       model.addAttribute("months", Month.values());
       model.addAttribute("currentMonth", budget.getMonth());
       model.addAttribute("currentYear", budget.getYear());
+   }
+   
+   public void addDefaultGroups(Budget budget) {
+      TreeSet<Group> defaultGroups = new TreeSet<>();
+      
+      Long maxGroupId = groupService.getMaxGroupId();
+      Group income = new Group(++maxGroupId, "income");
+      
+      defaultGroups.add(income);
+      income.setBudget(budget);
+      budget.getGroups().add(income);
+      
+      Group savings = new Group(++maxGroupId, "savings");
+      defaultGroups.add(savings);
+      
+      Group housing = new Group(++maxGroupId, "housing");
+      defaultGroups.add(housing);
+      
+      Group transportation = new Group(++maxGroupId, "transportation");
+      defaultGroups.add(transportation);
+      
+      Group food = new Group(++maxGroupId, "food");
+      defaultGroups.add(food);
+      
+      Group health = new Group(++maxGroupId, "health");
+      defaultGroups.add(health);
+      
+      Group insurance = new Group(++maxGroupId, "insurance");
+      defaultGroups.add(insurance);
+      
+      Group debt = new Group(++maxGroupId, "debt");
+      defaultGroups.add(debt);
+      
+      Group giving = new Group(++maxGroupId, "giving");
+      defaultGroups.add(giving);
+      
+      Group miscellanious = new Group(++maxGroupId, "miscellanious");
+      defaultGroups.add(miscellanious);
+      
+      for(Group grp: defaultGroups) {
+         grp.setBudget(budget);
+      }
+      
+      budget.getGroups().addAll(defaultGroups);
+   }
+   
+   public void copyGroupsFromLastBudget(Budget budget) {
+      Budget lastBudget = budgetService.getLastBudget();
+      Set<Group> lastBudgetGroups = lastBudget.getGroups();
+      Long maxGroupId = groupService.getMaxGroupId();
+      
+      for(Group group: lastBudgetGroups) {
+         Group newGroup = new Group(++maxGroupId, group.getName());
+         Set<Category> currentGroupCategories = group.getCategories();
+         for(Category category: currentGroupCategories) {
+            Category newCategory = new Category(category.getName(), category.getAllocation());
+            newCategory.setGroup(newGroup);
+            newGroup.getCategories().add(newCategory);
+         }
+         newGroup.setBudget(budget);
+         budget.getGroups().add(newGroup);
+      }
    }
 }

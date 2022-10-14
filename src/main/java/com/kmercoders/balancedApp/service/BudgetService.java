@@ -28,4 +28,19 @@ public class BudgetService {
    public void delete(Long budgetId) {
       budgetRepo.deleteById(budgetId);
    }
+   
+   public Budget getLastBudget() {
+      List<Budget> budgets = budgetRepo.findAll();
+      Long maxId = 0L;
+      Budget lastBudget = null;
+      
+      for(Budget budget: budgets) {
+         if(budget.getId() > maxId) {
+            maxId = budget.getId();
+            lastBudget = budget;
+         }
+      }
+      
+      return lastBudget;
+   }
 }

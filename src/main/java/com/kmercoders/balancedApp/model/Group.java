@@ -1,12 +1,12 @@
 package com.kmercoders.balancedApp.model;
 
+import java.math.BigDecimal;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -17,10 +17,10 @@ import javax.validation.constraints.NotBlank;
 @Entity
 @Table(name = "grp")
 public class Group implements Comparable<Group> {
+    
    @Id
-   @GeneratedValue
    private Long id;
-   
+      
    @NotBlank(message = "Please provide a group name")
    private String name;
    
@@ -33,14 +33,15 @@ public class Group implements Comparable<Group> {
    
    public Group() {}
    
-   public Group(String name) {
+   public Group(Long id, String name) {
+      this.id = id;
       this.name = name;
    }
    
    public Long getId() {
       return id;
    }
-   
+
    public void setId(Long id) {
       this.id = id;
    }
@@ -52,7 +53,7 @@ public class Group implements Comparable<Group> {
    public void setName(String name) {
       this.name = name;
    }
-   
+
    public Budget getBudget() {
       return budget;
    }
@@ -71,9 +72,24 @@ public class Group implements Comparable<Group> {
 
    @Override
    public int compareTo(Group o) {
-      if (this.getName() != null && o.getName() != null)
-         return this.getName().compareTo(o.getName());
-      
-      return 0;
+      return this.getName().compareTo(o.getName());
+   }
+
+   public BigDecimal getTotalAllocation() {
+      BigDecimal total = BigDecimal.ZERO;
+      Set<Category> categories = getCategories();
+      for(Category category: categories) {
+         total = total.add(category.getAllocation());
+      }
+      return total;
+   } 
+   
+   public BigDecimal getTotalSpent() {
+      BigDecimal total = BigDecimal.ZERO;
+      Set<Category> categories = getCategories();
+      for(Category category: categories) {
+         total = total.add(category.getTotalSpent());
+      }
+      return total;
    } 
 }

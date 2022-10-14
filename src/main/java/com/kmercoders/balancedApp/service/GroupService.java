@@ -1,5 +1,6 @@
 package com.kmercoders.balancedApp.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +24,20 @@ public class GroupService {
    
    public void delete(Long groupId) {
       groupRepo.deleteById(groupId);
+   }
+   
+   public Long getMaxGroupId() {
+      List<Group> groups = groupRepo.findAll();
+      Long maxGroupId = 0L;
+      
+      if(groups.isEmpty())
+         return maxGroupId;
+      else {
+         for(Group group: groups) {
+            if(group.getId() > maxGroupId)
+               maxGroupId = group.getId();
+         }
+         return maxGroupId;
+      }
    }
 }

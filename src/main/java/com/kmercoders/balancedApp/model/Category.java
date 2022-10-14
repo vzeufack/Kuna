@@ -12,12 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Entity
-public class Category implements Comparable<Category> {
+public class Category implements Comparable<Category> {   
    @Id
    @GeneratedValue
    private Long id;
@@ -26,7 +26,7 @@ public class Category implements Comparable<Category> {
    private String name;
    
    @NotNull(message = "Please provide an allocation for this category")
-   @Positive
+   @Min(value = 0)
    private BigDecimal allocation;
    
    @ManyToOne
@@ -38,11 +38,16 @@ public class Category implements Comparable<Category> {
    
    public Category() {}
    
+   public Category(String name) {
+      this.name = name;
+      this.allocation = BigDecimal.ZERO;
+   }
+   
    public Category(String name, BigDecimal allocation) {
       this.name = name;
       this.allocation = allocation;
    }
-
+   
    public Long getId() {
       return id;
    }
@@ -85,10 +90,23 @@ public class Category implements Comparable<Category> {
 
    @Override
    public int compareTo(Category o) {
-      if (this.getName() != null && o.getName() != null)
+      //if (this.getName() != null && o.getName() != null)
          return this.getName().compareTo(o.getName());
       
-      return 0;
+      //return 0;
    }  
+   
+   public BigDecimal getTotalSpent() {
+      Set<Transaction> txns = getTransactions();
+      BigDecimal total = BigDecimal.ZERO;
+      for(Transaction txn: txns) {
+         total = total.add(txn.getAmount());
+      }
+      return total;
+   }
+   
+   public BigDecimal getRemaining() {
+      return getAllocation().subtract(getTotalSpent());
+   }
    
 }

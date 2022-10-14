@@ -43,8 +43,10 @@
 		      		</a>
 						<span th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|" th:id="|budget-${budget.id}|"/>
 					</td>
+					<!--
 			      <td th:text="${#numbers.formatCurrency(budget.income)}"></td>
 			      <td th:text="${#numbers.formatCurrency(budget.balance)}"></td>
+			      -->
 			      <td style = 'text-align:right'>
 		      		<a type="button" data-toggle="modal" data-target='#delete-budget' th:attr="data-target='#delete-budget'+${budget.id}">
 		    				<i class="fas fa-trash" style="font-size:20px; color:orangered"></i>

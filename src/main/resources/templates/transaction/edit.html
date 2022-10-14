@@ -25,13 +25,6 @@
 				<div class="card-header h4" style="text-align: center;">Edit transaction</div>
 				<div class="card-body">
 					<form method="POST" th:action="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/edit/{tranId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id}, tranId = ${transaction.id})}" th:object = "${transaction}">
-						<div class="form-group">
-							<!--<label style="font-weight:bold" for="transactionType">Type</label>-->
-							<select class="form-control" id="type" name="type">
-								<option th:each="tranType : ${T(com.kmercoders.balancedApp.model.TransactionType).values()}" 
-        th:value="${tranType}" th:text="${#strings.capitalize(#strings.toLowerCase(tranType))}"></option>
-						   </select>
-					   </div>
 					   <div class="form-group">
 							<label style="font-weight:bold" for="date">Transaction date</label>
 							<input type="date" class="form-control" th:field="*{date}">

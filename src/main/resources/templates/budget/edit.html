@@ -43,12 +43,6 @@
 							    </div>
 						    </div>
 						</div>
-						<div class="form-group">
-							<label for="income">Income</label>
-							<input type="number" class="form-control" th:field="*{income}" placeholder="0.00">
-							<div class="alert alert-warning" th:if="${#fields.hasErrors('income')}" th:errors="*{income}" 
-							     th:text="${#numbers.formatCurrency(budget.income)}"></div>
-						</div>
 						<div class="form-group" style="text-align: center; margin-top:40px">
 							<a href="/budget/list"><button type="button" class="btn btn-secondary col-md-3">Cancel</button></a>
 							<button type="submit" class="btn btn-primary col-md-3 ml-auto">Submit</button>

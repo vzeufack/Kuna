@@ -46,8 +46,9 @@ public class GroupController {
          return "group/create";
       }
       
-      
+      group.setId(groupService.getMaxGroupId() + 1L);
       group.setBudget(budget);
+      //budget.getGroups().add(group);
       groupService.save(group);
       return "redirect:/budget/view/" + budgetId;
    }

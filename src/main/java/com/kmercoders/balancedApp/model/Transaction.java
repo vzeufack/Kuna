@@ -15,7 +15,6 @@ import javax.validation.constraints.Positive;
 public class Transaction implements Comparable<Transaction> {
    @Id @GeneratedValue
    private Long id;
-   private TransactionType type;
    
    @NotNull(message = "Please provide the date")
    private LocalDate date;
@@ -28,6 +27,7 @@ public class Transaction implements Comparable<Transaction> {
    private String note;
    
    public Transaction() {
+      date = LocalDate.now();
       dateCreated = LocalDateTime.now();
    }
    
@@ -40,14 +40,6 @@ public class Transaction implements Comparable<Transaction> {
    
    public void setId(Long id) {
       this.id = id;
-   }
-   
-   public TransactionType getType() {
-      return type;
-   }
-   
-   public void setType(TransactionType type) {
-      this.type = type;
    }
    
    public LocalDate getDate() {

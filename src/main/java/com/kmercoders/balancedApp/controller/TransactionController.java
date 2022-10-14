@@ -101,7 +101,6 @@ public class TransactionController {
          return "transaction/edit";
       }
       
-      transactionFromDB.setType(transaction.getType());
       transactionFromDB.setDate(transaction.getDate());
       transactionFromDB.setAmount(transaction.getAmount());
       transactionFromDB.setNote(transaction.getNote());
