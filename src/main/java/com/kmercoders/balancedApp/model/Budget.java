@@ -11,14 +11,20 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.JoinColumn;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "month", "year" }))
-public class Budget {
+public class Budget implements Comparable<Budget>{
    @Id
    @GeneratedValue
    private Long id;
@@ -29,6 +35,11 @@ public class Budget {
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "budget")
    @OrderBy("id ASC")
    private Set<Group> groups = new TreeSet<>();
+   
+   @ManyToMany
+   @JoinTable(name = "user_budget", inverseJoinColumns = @JoinColumn(name = "budget_id"), joinColumns = @JoinColumn(name = "user_id"))
+   @JsonIgnore
+   private Set <User> users = new TreeSet<>();
    
    public Budget() {}
 
@@ -69,6 +80,14 @@ public class Budget {
        this.groups = groups;
    }
    
+   public Set<User> getUsers() {
+      return users;
+   }
+
+   public void setUsers(Set<User> users) {
+      this.users = users;
+   }
+
    public BigDecimal getTotalIncome() {
       BigDecimal totalIncome = BigDecimal.ZERO;
       Set<Group> groups = getGroups();
@@ -116,6 +135,14 @@ public class Budget {
    }
    
    public double getPercentSpent() {
-      return getTotalSpent().multiply(new BigDecimal(100)).divide(getTotalIncome(), 10, RoundingMode.HALF_UP).doubleValue();   
+      if(getTotalIncome().equals(BigDecimal.ZERO))
+         return 0.0;
+      else
+         return getTotalSpent().multiply(new BigDecimal(100)).divide(getTotalIncome(), 10, RoundingMode.HALF_UP).doubleValue();   
+   }
+   
+   @Override
+   public int compareTo(Budget budget) {
+       return this.id.compareTo(budget.getId());
    }
 }

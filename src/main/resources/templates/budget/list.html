@@ -33,6 +33,7 @@
 				</div>
 			</div>
 		</nav>
+		<a th:href="@{/logout}" style = "float:right; font-weight:bold; margin-top:5px; margin-bottom:5px">Logout</a>
 
 		<table class="table table-striped">
 			<tbody>
@@ -41,7 +42,7 @@
 						<a th:href="@{/budget/edit/{budgetId} (budgetId = ${budget.id})}">
 			      		<i class="fas fa-edit" style="font-size:20px; color:cadetblue; margin-right:3px"></i>
 		      		</a>
-						<span th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|" th:id="|budget-${budget.id}|"/>
+						<span th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|" th:id="|budget-${budget.id}|" style="font-weight: bold"/>
 					</td>
 					<!--
 			      <td th:text="${#numbers.formatCurrency(budget.income)}"></td>

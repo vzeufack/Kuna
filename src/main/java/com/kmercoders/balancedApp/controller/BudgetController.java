@@ -2,13 +2,13 @@ package com.kmercoders.balancedApp.controller;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -21,11 +21,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.kmercoders.balancedApp.model.Budget;
 import com.kmercoders.balancedApp.model.Category;
 import com.kmercoders.balancedApp.model.Group;
+import com.kmercoders.balancedApp.model.User;
 import com.kmercoders.balancedApp.service.BudgetService;
 import com.kmercoders.balancedApp.service.GroupService;
 
 @Controller
-@RequestMapping(value = { "/budget", "/" })
+@RequestMapping(value = { "/budget"})
 public class BudgetController {
    @Autowired
    private BudgetService budgetService;
@@ -34,11 +35,11 @@ public class BudgetController {
    private GroupService groupService;
   
 
-   @GetMapping(value = { "list", "" })
-   public String showBudgets(ModelMap model) {
-      List<Budget> budgets = budgetService.findAll();
+   @GetMapping(value = { "list"})
+   public String showBudgets(@AuthenticationPrincipal User user, ModelMap model) {
+      TreeSet<Budget> budgets = budgetService.getBudgets(user);
 
-      model.addAttribute("budgets", budgets);
+      model.put("budgets", budgets);
       return "budget/list";
    }
 
@@ -53,7 +54,7 @@ public class BudgetController {
    }
 
    @PostMapping(value = "create")
-   public String createBudget(ModelMap model, @ModelAttribute("budget") @Valid Budget budget, BindingResult result) {
+   public String createBudget(@AuthenticationPrincipal User user, ModelMap model, @ModelAttribute("budget") @Valid Budget budget, BindingResult result) {
       if (result.hasErrors()) {
          feedModel(model, budget);
          return "budget/create";
@@ -65,7 +66,7 @@ public class BudgetController {
          else
             copyGroupsFromLastBudget(budget);
          
-         budgetService.save(budget);
+         budgetService.save(user, budget);
       } catch (Exception e) {
          e.printStackTrace();
          feedModel(model, budget);
@@ -93,7 +94,7 @@ public class BudgetController {
    }
 
    @PostMapping(value = "edit/{budgetId}")
-   public String updateBudget(ModelMap model, @ModelAttribute("budget") @Valid Budget budget, BindingResult result,
+   public String updateBudget(@AuthenticationPrincipal User user, ModelMap model, @ModelAttribute("budget") @Valid Budget budget, BindingResult result,
          @PathVariable Long budgetId) {
       Budget budgetFromDB = budgetService.findById(budgetId).get();
 
@@ -107,7 +108,7 @@ public class BudgetController {
       budgetFromDB.setYear(budget.getYear());
 
       try {
-         budgetService.save(budgetFromDB);
+         budgetService.save(user, budgetFromDB);
       } catch (Exception e) {
          budget.setId(budgetId);
          feedModel(model, budget);
