@@ -11,19 +11,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.JoinColumn;
-
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "month", "year" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "month", "year", "user_id" }))
 public class Budget implements Comparable<Budget>{
    @Id
    @GeneratedValue
@@ -36,10 +31,13 @@ public class Budget implements Comparable<Budget>{
    @OrderBy("id ASC")
    private Set<Group> groups = new TreeSet<>();
    
-   @ManyToMany
-   @JoinTable(name = "user_budget", inverseJoinColumns = @JoinColumn(name = "budget_id"), joinColumns = @JoinColumn(name = "user_id"))
-   @JsonIgnore
-   private Set <User> users = new TreeSet<>();
+   //@ManyToMany
+   //@JoinTable(name = "user_budget", inverseJoinColumns = @JoinColumn(name = "budget_id"), joinColumns = @JoinColumn(name = "user_id"))
+   //@JsonIgnore
+   //private Set <User> users = new TreeSet<>();
+   
+   @ManyToOne
+   private User user;
    
    public Budget() {}
 
@@ -80,12 +78,19 @@ public class Budget implements Comparable<Budget>{
        this.groups = groups;
    }
    
-   public Set<User> getUsers() {
+   /*public Set<User> getUsers() {
       return users;
    }
 
    public void setUsers(Set<User> users) {
       this.users = users;
+   }*/
+   public User getUser() {
+      return user;
+   }
+
+   public void setUser(User user) {
+      this.user = user;
    }
 
    public BigDecimal getTotalIncome() {
@@ -99,8 +104,8 @@ public class Budget implements Comparable<Budget>{
       }
       
       return totalIncome;
-   }
-   
+   }   
+
    public BigDecimal getTotalPlanned() {
       BigDecimal totalPlanned = BigDecimal.ZERO;
       Set<Group> groups = getGroups();

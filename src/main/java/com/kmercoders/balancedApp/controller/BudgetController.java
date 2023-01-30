@@ -64,7 +64,7 @@ public class BudgetController {
          if(budgetService.findAll().isEmpty())
             addDefaultGroups(budget);
          else
-            copyGroupsFromLastBudget(budget);
+            copyGroupsFromLastBudget(budget, user);
          
          budgetService.save(user, budget);
       } catch (Exception e) {
@@ -175,8 +175,8 @@ public class BudgetController {
       budget.getGroups().addAll(defaultGroups);
    }
    
-   public void copyGroupsFromLastBudget(Budget budget) {
-      Budget lastBudget = budgetService.getLastBudget();
+   public void copyGroupsFromLastBudget(Budget budget, User user) {
+      Budget lastBudget = budgetService.getLastBudget(user);
       Set<Group> lastBudgetGroups = lastBudget.getGroups();
       Long maxGroupId = groupService.getMaxGroupId();
       

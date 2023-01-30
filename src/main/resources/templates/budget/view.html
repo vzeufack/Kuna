@@ -52,9 +52,8 @@
 					<img src="/images/logo.png" alt="" style="height:45px;">
 				</a>
 				<div>
-					<div class="nav navbar-nav navbar-center navbar-text h2" style="bottom:25px" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></div>
-					<div class="nav navbar-nav navbar-center navbar-text h4" style="bottom:-5px; color:gold" 
-					     th:text="|Income: ${#numbers.formatCurrency(budget.getTotalIncome())} / Planned: ${#numbers.formatCurrency(budget.getTotalPlanned())}|"> </div>
+					<div class="nav navbar-nav navbar-center navbar-text h2" style="bottom:10px" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></div>
+					
 				</div>
 				<div class="navbar-nav ml-auto">
 					<a th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" "btn btn-primary"><i class="fas fa-plus" style="font-size:25px; color:white;"></i></a>
@@ -62,6 +61,10 @@
 				</div>
 			</div>
 		</nav>
+		
+		<div class="h4" style="font-weight:bold; text-align:center; margin-top: 15px" 
+					     th:text="|Income: ${#numbers.formatCurrency(budget.getTotalIncome())} / Planned: ${#numbers.formatCurrency(budget.getTotalPlanned())}|"> </div>
+					     
 		<div style = "margin-top:5px; font-weight:bold">			
 			<table style="width: 100%; margin-left: auto; margin-right: auto;">
 				<tr>

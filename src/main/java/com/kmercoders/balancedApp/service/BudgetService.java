@@ -1,9 +1,7 @@
 package com.kmercoders.balancedApp.service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +17,12 @@ public class BudgetService {
    private BudgetRepository budgetRepo;
 
    public Budget save(User user, Budget budget) {
-      Set<User> users = new HashSet<>();
-      users.add(user);
-      budget.setUsers(users);
-      
+      budget.setUser(user);
       return budgetRepo.save(budget);
    }
    
-   public TreeSet<Budget> getBudgets(@AuthenticationPrincipal User user){
-      Set<User> users = new HashSet<>();
-      users.add(user);
-      
-      return budgetRepo.findByUsersIn(users);
+   public TreeSet<Budget> getBudgets(@AuthenticationPrincipal User user){      
+      return budgetRepo.findByUser(user);
    }
 
    public Optional<Budget> findById(Long budgetId) {
@@ -45,8 +37,8 @@ public class BudgetService {
       budgetRepo.deleteById(budgetId);
    }
    
-   public Budget getLastBudget() {
-      List<Budget> budgets = budgetRepo.findAll();
+   public Budget getLastBudget(User user) {
+      TreeSet<Budget> budgets = budgetRepo.findByUser(user);
       Long maxId = 0L;
       Budget lastBudget = null;
       
