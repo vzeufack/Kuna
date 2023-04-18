@@ -38,6 +38,9 @@ public class User {
    
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "user")
    private Set<Authority> authorities = new HashSet<>();
+   
+   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
+   private Set<PaymentMethod> paymentMethods = new TreeSet<>();
 
    public Long getId() {
       return id;
@@ -85,5 +88,13 @@ public class User {
 
    public void setAuthorities(Set<Authority> authorities) {
       this.authorities = authorities;
+   }
+
+   public Set<PaymentMethod> getPaymentMethods() {
+      return paymentMethods;
+   }
+
+   public void setPaymentMethods(Set<PaymentMethod> paymentMethods) {
+      this.paymentMethods = paymentMethods;
    }
 }   

@@ -22,22 +22,21 @@
 <body>
 	<div class="container">
 		 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-			  <a class="navbar-brand" href="#">Kuna</a>
+			  <a class="navbar-brand" href="/budget/list">Kuna</a>
 			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>
 			  </button>
 			  <div class="collapse navbar-collapse" id="navbarText">
 			    <ul class="navbar-nav mr-auto">
-			      <li class="nav-item active">
-			        <a class="nav-link" href="/budget/list">Budgets</a>
-			      </li>
 			      <li class="nav-item">
+			        <a class="nav-link" href="/budget/list">Budgets <span class="sr-only">(current)</span></a>
+			      </li>
+			      <li class="nav-item active">
 			        <a class="nav-link" href="/paymentMethod/list">Payment methods</a>
 			      </li>
 			    </ul>
 			    <span class="navbar-text">
-			      <!--<a href="/budget/create" "btn btn-primary"><i class="fas fa-plus" style="font-size:25px; margin-top:5px; margin-bottom:5px"></i></a>-->
-			      <a href="/budget/create" "btn btn-primary" style = "font-weight:bold; margin-right:10px">+ add</i></a>
+			      <a href="/paymentMethod/create" "btn btn-primary" style = "font-weight:bold; margin-right:10px">+ add</i></a>
 			      <a th:href="@{/logout}" style = "font-weight:bold;">Logout</a>
 			    </span>
 			  </div>
