@@ -30,7 +30,9 @@ public class Transaction implements Comparable<Transaction> {
    private Category category;
    
    @ManyToOne
-   private Category paymentMethod;
+   private PaymentMethod paymentMethod;
+   
+   private boolean isSettled;
    
    public Transaction() {
       date = LocalDate.now();
@@ -84,12 +86,20 @@ public class Transaction implements Comparable<Transaction> {
       this.category = category;
    }
 
-   public Category getPaymentMethod() {
+   public PaymentMethod getPaymentMethod() {
       return paymentMethod;
    }
 
-   public void setPaymentMethod(Category paymentMethod) {
+   public void setPaymentMethod(PaymentMethod paymentMethod) {
       this.paymentMethod = paymentMethod;
+   }
+   
+   public boolean getIsSettled() {
+	   return isSettled;
+   }
+   
+   public void setIsSettled(boolean isSettled) {
+	   this.isSettled = isSettled;
    }
 
    @Override

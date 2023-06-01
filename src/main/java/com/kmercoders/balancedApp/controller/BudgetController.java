@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.kmercoders.balancedApp.model.Budget;
 import com.kmercoders.balancedApp.model.Category;
 import com.kmercoders.balancedApp.model.Group;
+import com.kmercoders.balancedApp.model.PaymentMethod;
 import com.kmercoders.balancedApp.model.User;
 import com.kmercoders.balancedApp.service.BudgetService;
 import com.kmercoders.balancedApp.service.GroupService;
+import com.kmercoders.balancedApp.service.PaymentMethodService;
 
 @Controller
 @RequestMapping(value = { "/budget"})
@@ -33,6 +35,9 @@ public class BudgetController {
    
    @Autowired
    private GroupService groupService;
+   
+   @Autowired
+   private PaymentMethodService paymentMethodService;
   
 
    @GetMapping(value = { "list"})
@@ -82,6 +87,17 @@ public class BudgetController {
       model.put("budget", budget);
       
       return "budget/view";
+   }
+   
+   @GetMapping(value = "transactions_by_payment_method/{budgetId}")
+   public String transactionsByPaymentMethod(@AuthenticationPrincipal User user, ModelMap model, @PathVariable Long budgetId) {
+      Budget budget = budgetService.findById(budgetId).get();
+      TreeSet<PaymentMethod> paymentMethods = paymentMethodService.getPaymentMethods(user, budgetId);
+
+      model.put("paymentMethods", paymentMethods);
+      model.put("budget", budget);
+      
+      return "budget/transactionsByPaymentMethod";
    }
 
    @GetMapping(value = "edit/{budgetId}")

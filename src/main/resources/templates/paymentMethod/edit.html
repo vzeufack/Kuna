@@ -2,7 +2,7 @@
 <html>
 
 <head>
-	<title>Create payment method</title>
+	<title>Edit payment method</title>
 	<th:block th:replace="fragments/header :: scripts"></th:block>
 </head>
 
@@ -27,9 +27,9 @@
 
 		<div class="col-sm-6 mx-auto" style="margin-top: 100px;">
 			<div class="card">
-				<div class="card-header h4" style="text-align: center;">Create payment method</div>
+				<div class="card-header h4" style="text-align: center;">Edit payment method</div>
 				<div class="card-body">
-					<form method="POST" th:action="@{/paymentMethod/create}" th:object="${paymentMethod}">
+					<form method="POST" th:action="@{/paymentMethod/edit/{paymentMethodId} (paymentMethodId = ${paymentMethod.id})}" th:object="${paymentMethod}">
 						<div class="form-group">
 							<label for="name">Name</label>
 							<input type="text" class="form-control" th:field="*{name}">

@@ -1,5 +1,6 @@
 package com.kmercoders.balancedApp.model;
 
+import java.math.BigDecimal;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -13,10 +14,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 
 @Entity
-public class PaymentMethod {
+public class PaymentMethod implements Comparable<PaymentMethod> {
    @Id
    @GeneratedValue
-   private long id;
+   private Long id;
    
    private String name;
    private PaymentType paymentType;
@@ -52,11 +53,11 @@ public class PaymentMethod {
       this.paymentType = paymentType;
    }
    
-   public long getId() {
+   public Long getId() {
       return id;
    }
    
-   public void setId(long id) {
+   public void setId(Long id) {
       this.id = id;
    }
 
@@ -74,5 +75,28 @@ public class PaymentMethod {
 
    public void setTransactions(Set<Transaction> transactions) {
       this.transactions = transactions;
+   }
+   
+   public BigDecimal getTotal(Long budgetId) {
+	   BigDecimal result = new BigDecimal(0);
+	   for(Transaction t: transactions) {
+		   if(t.getCategory().getGroup().getBudget().getId() == budgetId)
+			   result = result.add(t.getAmount());
+	   }
+	   return result;
+   }
+   
+   public BigDecimal getTotal(Long budgetId, boolean isSettled) {
+	   BigDecimal result = new BigDecimal(0);
+	   for(Transaction t: transactions) {
+		   if(t.getCategory().getGroup().getBudget().getId() == budgetId && t.getIsSettled() == isSettled)
+			   result = result.add(t.getAmount());
+	   }
+	   return result;
+   }
+   
+   @Override
+   public int compareTo(PaymentMethod method) {
+       return this.id.compareTo(method.getId());
    }
 }

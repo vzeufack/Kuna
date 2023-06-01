@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.kmercoders.balancedApp.model.PaymentMethod;
+import com.kmercoders.balancedApp.model.PaymentType;
 import com.kmercoders.balancedApp.model.User;
 import com.kmercoders.balancedApp.service.PaymentMethodService;
 
@@ -24,7 +25,7 @@ public class PaymentMethodController {
    private PaymentMethodService paymentMethodService;
   
 
-   @GetMapping(value = { "list"})
+   @GetMapping(value = {"list"})
    public String showPaymentMethods(@AuthenticationPrincipal User user, ModelMap model) {
       TreeSet<PaymentMethod> paymentMethods = paymentMethodService.getPaymentMethods(user);
 
@@ -36,6 +37,8 @@ public class PaymentMethodController {
    public String showPaymentMethodCreationForm(ModelMap model) {
       PaymentMethod paymentMethod = new PaymentMethod();
       model.addAttribute("paymentMethod", paymentMethod);
+      model.addAttribute("paymentTypes", PaymentType.values());
+      model.addAttribute("paymentType", "");
       return "paymentMethod/create";
    }
 
@@ -46,7 +49,7 @@ public class PaymentMethodController {
          return "paymentMethod/create";
       }
 
-      try {         
+      try {
          paymentMethodService.save(user, paymentMethod);
       } catch (Exception e) {
          e.printStackTrace();
@@ -69,6 +72,7 @@ public class PaymentMethodController {
    public String showEditPaymentMethodForm(ModelMap model, @PathVariable Long paymentMethodId) {
       PaymentMethod paymentMethod = paymentMethodService.findById(paymentMethodId).get();
       feedModel(model, paymentMethod);
+      model.addAttribute("paymentTypes", PaymentType.values());
       return "paymentMethod/edit";
    }
 
