@@ -27,7 +27,7 @@
 				var groupId = splittedId[4];
 				var categoryId = splittedId[5];
 				var transactionId = splittedId[6];
-				window.location.href = '/budget/' + budgetId + '/group/' + groupId + '/category/' + categoryId + '/transaction/delete/' + transactionId;
+				window.location.href = '/budget/' + budgetId + '/group/' + groupId + '/category/' + categoryId + '/transaction/delete/' + transactionId + '/0';
 			});
 		});
 	</script>
@@ -46,20 +46,25 @@
 <body>
 	<!--<div style="margin-left:5%; margin-right:5%">-->
 	<div class="container">
-		<nav class="navbar navbar-expand-md navbar-dark bg-primary static-top">
-			<div class="collapse navbar-collapse">
-				<a class="navbar-brand" href="/budget/list">
-					<img src="/images/logo.png" alt="" style="height:45px;">
-				</a>
-				<div>
-					<div class="nav navbar-nav navbar-center navbar-text h2" style="bottom:10px" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></div>
-					
-				</div>
-				<div class="navbar-nav ml-auto">
-					<a th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" "btn btn-primary"><i class="fas fa-plus" style="font-size:25px; color:white;"></i></a>
-					
-				</div>
-			</div>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+		  <a class="navbar-brand" href="#" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarText">
+		    <ul class="navbar-nav mr-auto">
+		      <li class="nav-item active">
+		        <a class="nav-link" href="#">Plan</a>
+		      </li>
+		      <li class="nav-item">
+		        <a class="nav-link" th:href="@{/budget/transactions_by_payment_method/{budgetId} (budgetId = ${budget.id})}">Payment Methods</a>
+		      </li>
+		    </ul>
+		    <span class="navbar-text">
+		      <a th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" "btn btn-primary" style = "font-weight:bold; margin-right:10px">+ Group</i></a>
+		      <a href="/budget/list" style = "font-weight:bold;">Budgets</a>
+		    </span>
+		  </div>
 		</nav>
 		
 		<div class="h4" style="font-weight:bold; text-align:center; margin-top: 15px" 

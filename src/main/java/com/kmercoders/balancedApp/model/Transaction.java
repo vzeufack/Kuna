@@ -26,13 +26,18 @@ public class Transaction implements Comparable<Transaction> {
    private BigDecimal amount;
    private String note;
    
+   @ManyToOne
+   private Category category;
+   
+   @ManyToOne
+   private PaymentMethod paymentMethod;
+   
+   private boolean isSettled;
+   
    public Transaction() {
       date = LocalDate.now();
       dateCreated = LocalDateTime.now();
-   }
-   
-   @ManyToOne
-   private Category category;
+   }   
    
    public Long getId() {
       return id;
@@ -79,6 +84,22 @@ public class Transaction implements Comparable<Transaction> {
 
    public void setCategory(Category category) {
       this.category = category;
+   }
+
+   public PaymentMethod getPaymentMethod() {
+      return paymentMethod;
+   }
+
+   public void setPaymentMethod(PaymentMethod paymentMethod) {
+      this.paymentMethod = paymentMethod;
+   }
+   
+   public boolean getIsSettled() {
+	   return isSettled;
+   }
+   
+   public void setIsSettled(boolean isSettled) {
+	   this.isSettled = isSettled;
    }
 
    @Override
