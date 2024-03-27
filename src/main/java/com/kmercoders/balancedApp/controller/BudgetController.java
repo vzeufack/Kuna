@@ -66,7 +66,7 @@ public class BudgetController {
       }
 
       try {
-         if(budgetService.findAll().isEmpty())
+         if(budgetService.getBudgets(user).isEmpty())
             addDefaultGroups(budget);
          else
             copyGroupsFromLastBudget(budget, user);
