@@ -43,6 +43,7 @@
 						<div class="form-group">
 							<label for="name">Payment Method</label>
 							<select class="form-control" th:field="*{paymentMethod}">
+								<option value="0">select option</option>
 							    <option th:each="paymentMethod : ${paymentMethods}" th:value="${paymentMethod.id}" th:text="${paymentMethod.name}"></option>
 							</select>
 						</div>
@@ -51,7 +52,6 @@
 						</div>
 						<div class="form-group">
 							<label style="font-weight:bold" for="note">Note</label><br>
-							<!--<input type="textarea" class="form-control" th:field="*{note}">-->
 							<textarea th:field="*{note}" style="width:100%;" rows="4"></textarea>
 						</div>
 						

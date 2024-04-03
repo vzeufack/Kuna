@@ -114,6 +114,7 @@ public class TransactionController {
       transactionFromDB.setDate(transaction.getDate());
       transactionFromDB.setAmount(transaction.getAmount());
       transactionFromDB.setNote(transaction.getNote());
+      
       transactionFromDB.setPaymentMethod(transaction.getPaymentMethod());
       transactionFromDB.setIsSettled(transaction.getIsSettled());
       

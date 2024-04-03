@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,7 +24,7 @@ public class PaymentMethod implements Comparable<PaymentMethod> {
    @ManyToOne
    private User user;
    
-   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "paymentMethod")
+   @OneToMany(fetch = FetchType.LAZY, mappedBy = "paymentMethod")
    @OrderBy("date DESC, dateCreated DESC")
    private Set<Transaction> transactions = new TreeSet<>();
    

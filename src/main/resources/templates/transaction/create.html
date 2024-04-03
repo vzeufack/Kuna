@@ -43,6 +43,7 @@
 						<div class="form-group">
 							<label for="name">Payment Method</label>
 							<select class="form-control" th:field="*{paymentMethod}">
+								<option value="0">select option</option>
 							    <option th:each="paymentMethod : ${paymentMethods}" th:value="${paymentMethod.id}" th:text="${paymentMethod.name}"></option>
 							</select>
 						</div>
