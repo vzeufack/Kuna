@@ -2,7 +2,9 @@ package com.kmercoders.balancedApp.controller;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.validation.Valid;
@@ -85,6 +87,13 @@ public class BudgetController {
    public String showBudget(ModelMap model, @PathVariable Long budgetId) {
       Budget budget = budgetService.findById(budgetId).get();      
       model.put("budget", budget);
+      
+      Map<String, Double> graphData = new TreeMap<>();
+      for(Group group: budget.getGroups()) {
+    	  if(!group.getName().equalsIgnoreCase("income"))
+    		  graphData.put(group.getName(), group.getTotalLeft().doubleValue());  
+      }
+      model.addAttribute("chartData", graphData);
       
       return "budget/view";
    }

@@ -1,6 +1,7 @@
 package com.kmercoders.balancedApp.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -103,6 +104,24 @@ public class Category implements Comparable<Category> {
          total = total.add(txn.getAmount());
       }
       return total;
+   }
+   
+   public BigDecimal getTotalLeft() {
+      return getAllocation().subtract(getTotalSpent());
+   }
+   
+   public double getPercentSpent() {
+	   if(getAllocation().equals(BigDecimal.ZERO))
+         return 0.0;
+      else
+         return getTotalSpent().multiply(new BigDecimal(100)).divide(getAllocation(), 10, RoundingMode.HALF_UP).doubleValue();  
+   }
+   
+   public double getPercentLeft() {
+	   if(getAllocation().equals(BigDecimal.ZERO))
+         return 0.0;
+      else
+         return getTotalLeft().multiply(new BigDecimal(100)).divide(getAllocation(), 10, RoundingMode.HALF_UP).doubleValue();  
    }
    
    public BigDecimal getRemaining() {

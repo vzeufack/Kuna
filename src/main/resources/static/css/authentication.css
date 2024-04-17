@@ -26,6 +26,11 @@
 	border-radius:20px
 }
 
+label{
+	margin-bottom: 0px;
+	font-weight: bold;
+}
+
 #register-link{
 	margin-top:10px;
 }

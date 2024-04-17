@@ -92,4 +92,8 @@ public class Group implements Comparable<Group> {
       }
       return total;
    } 
+   
+   public BigDecimal getTotalLeft() {
+      return getTotalAllocation().subtract(getTotalSpent());
+   }
 }

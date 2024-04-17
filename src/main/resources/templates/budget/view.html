@@ -3,230 +3,141 @@
 
 <head>
 	<title>View budget</title>
-	<th:block th:replace="fragments/header :: scripts"></th:block>
-	<script th:inline="javascript">
-		$(function () {
-			$("button[id*='delete_group_btn']").click(function () {
-				var splittedId = $(this).prop('id').split('_');
-				var budgetId = splittedId[3];
-				var groupId = splittedId[4];
-				window.location.href = '/budget/' + budgetId + '/group/delete/' + groupId;
-			});
-			
-			$("button[id*='delete_category_btn']").click(function () {
-				var splittedId = $(this).prop('id').split('_');
-				var budgetId = splittedId[3];
-				var groupId = splittedId[4];
-				var categoryId = splittedId[5];
-				window.location.href = '/budget/' + budgetId + '/group/' + groupId + '/category/delete/' + categoryId;
-			});
-			
-			$("button[id*='delete_transaction_btn']").click(function () {
-				var splittedId = $(this).prop('id').split('_');
-				var budgetId = splittedId[3];
-				var groupId = splittedId[4];
-				var categoryId = splittedId[5];
-				var transactionId = splittedId[6];
-				window.location.href = '/budget/' + budgetId + '/group/' + groupId + '/category/' + categoryId + '/transaction/delete/' + transactionId + '/0';
-			});
-		});
-	</script>
-	
-	<style>
-		.note {
-		  display: block;
-		  width: 600px;
-		  overflow: hidden;
-		  white-space: nowrap;
-		  text-overflow: ellipsis;
-		}
-	</style>
+	<th:block th:replace="fragments/header::css"></th:block>
+	<link rel="stylesheet" href="/css/main.css"/>
 </head>
 
 <body>
-	<!--<div style="margin-left:5%; margin-right:5%">-->
 	<div class="container">
-		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-		  <a class="navbar-brand" href="#" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></a>
-		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-		    <span class="navbar-toggler-icon"></span>
-		  </button>
-		  <div class="collapse navbar-collapse" id="navbarText">
+		<nav class="navbar navbar-expand-lg bg-white border-bottom shadowed">
+		  <a class="navbar-brand my-anchor" id="logo" href="/budget/list">Nkap <i class='fas fa-coins'></i></a>
+		  <ul class="navbar-nav mr-auto">
+		  </ul>
+		  <ul class="navbar-nav">
+		  	 <li class="nav-item">
+		  	 	<a class="my-anchor" th:href="@{/logout}">
+		  	 		<i class="fas fa-sign-out-alt"></i>
+		  	 	</a>
+		  	 </li>
+		  </ul>
+		</nav>
+		
+		<nav class="navbar navbar-expand-lg bg-white border-bottom shadowed mt-1">
 		    <ul class="navbar-nav mr-auto">
+		      <li class="nav-item">
+		      	<h5 class="nav-link" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></h5>
+		      </li>
+		    </ul>
+		    <ul class="navbar-nav" id="menu">
 		      <li class="nav-item active">
 		        <a class="nav-link" href="#">Plan</a>
 		      </li>
 		      <li class="nav-item">
-		        <a class="nav-link" th:href="@{/budget/transactions_by_payment_method/{budgetId} (budgetId = ${budget.id})}">Payment Methods</a>
+		        <a class="nav-link" th:href="@{/budget/transactions_by_payment_method/{budgetId} (budgetId = ${budget.id})}">Payment methods</a>
 		      </li>
 		    </ul>
-		    <span class="navbar-text">
-		      <a th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" "btn btn-primary" style = "font-weight:bold; margin-right:10px">+ Group</i></a>
-		      <a href="/budget/list" style = "font-weight:bold;">Budgets</a>
-		    </span>
-		  </div>
 		</nav>
 		
-		<div class="h4" style="font-weight:bold; text-align:center; margin-top: 15px" 
-					     th:text="|Income: ${#numbers.formatCurrency(budget.getTotalIncome())} / Planned: ${#numbers.formatCurrency(budget.getTotalPlanned())}|"> </div>
-					     
-		<div style = "margin-top:5px; font-weight:bold">			
-			<table style="width: 100%; margin-left: auto; margin-right: auto;">
-				<tr>
-			      <td th:text="|Spent: ${#numbers.formatCurrency(budget.getTotalSpent())}|" style="text-align: left;"></td>
-			      <td th:text="|Remainder: ${#numbers.formatCurrency(budget.getTotalRemaining())}|" style="text-align: right;"></td>
-			    </tr>
-			</table>
+		<div class="row mt-3">
+			<div class="col-md-3">
+				<div class="col-md-12 stat">
+					<div>Total income</div>
+					<h4 th:text="|${#numbers.formatCurrency(budget.getTotalIncome())}|"></h4>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="col-md-12 stat">
+					<div>Planned</div>
+					<h4 th:text="|${#numbers.formatCurrency(budget.getTotalPlanned())}|"></h4>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="col-md-12 stat">
+					<div>Spent</div>
+					<h4 th:text="|${#numbers.formatCurrency(budget.getTotalSpent())}|"></h4>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="col-md-12 stat">
+					<div>Balance</div>
+					<h4 th:text="|${#numbers.formatCurrency(budget.getTotalRemaining())}|"></h4>
+				</div>
+			</div>
 		</div>
 		
-		<div class="progress" style = "margin-bottom:10px">
-		  <div class="progress-bar bg-info" role="progressbar"  aria-valuenow="25" 
-		  	th:style="|width: ${budget.getPercentSpent()}%|" aria-valuemin="0" aria-valuemax="100"></div>
-		</div>
-		<div class="card" th:each="group : ${budget.groups}" style="margin-top:3px">
+		<!--<div id="chart_div"></div>-->
+		<!--<div class="row" id="piechart" style="text-align:center; width: 1000px; height: 250px;"></div>-->
+		
+		<div class="card shadowed mt-3" th:each="group : ${budget.groups}">
 		  <div class="card-header">
-		  	 <span style="font-weight:bold; font-size:25px" th:text="${#strings.capitalize(#strings.toLowerCase(group.name))}"></span>
-		  	 <div style = "float:right; font-size:20px;">
-			  	 <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/create (budgetId = ${budget.id}, groupId = ${group.id})}">
-			  	 	<i class="fas fa-plus" style="color:green; margin-right:6px">
-			  	 	</i>
-			  	 </a>
-			  	 <a type="button" th:if="${group.name} != 'income'" th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}">
-		   		 <i class="fas fa-edit" style="color:cadetblue; margin-right:6px"></i>
-				 </a>
-			    
-			    <a type="button" data-toggle="modal" th:if="${group.name} != 'income'"  th:attr="data-target='#delete-group'+${group.id}">
-	 				<i class="fas fa-trash" style="color:orangered"></i>
-				</a>
-			 </div>
+		  	<a type="button" th:if="${group.name} != 'income'" th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}">
+		  	  <span class="my-anchor group-name" th:text="${#strings.capitalize(#strings.toLowerCase(group.name))}"></span>
+		  	</a>
+		  	<span class="group-name" th:if="${group.name} == 'income'" th:text="${#strings.capitalize(#strings.toLowerCase(group.name))}"></span>
 		  </div>
 		  <div class="card-body">
-		    <div class="card" th:each="category : ${group.categories}">
+		    <div class="card mb-3" th:each="category: ${group.categories}">
 		    	<div class="card-header">
 		    	  <div class = "row">
-			    	  <div class="col-sm-4" style="font-weight:bold">
-						  <a data-toggle="collapse" th:href="|#collapse${category.id}|" role="button" aria-expanded="false" aria-controls="|collapse${category.id}|">
-						    <span th:text="|${#strings.capitalize(#strings.toLowerCase(category.name))} (${#numbers.formatCurrency(category.allocation)})|"></span>
-						  </a>
+			    	  <div class="col-sm-4">
+			    	  	  <a id="toggle-bars" data-toggle="collapse" th:href="|#collapse${category.id}|" role="button" aria-controls="|collapse${category.id}|">
+			    	  	  	<i class="fa fa-bars my-anchor">&nbsp</i>
+			    	  	  </a>
+			    	  	  <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/edit/{categoryId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
+			    	  	  	<span class="my-anchor" th:text="|${#strings.capitalize(#strings.toLowerCase(category.name))}|"></span>
+			    	  	  </a>			  
 					  </div>
-					  <div class="col-sm-4" style="font-weight:bold">
-					  	 <!--<span th:if="${group.name == 'income'}">Earned:</span>
-					  	 <span th:if="${group.name != 'income'}">Spent:</span>
-					  	 <span th:text="|${#numbers.formatCurrency(category.getTotalSpent)}"></span>
-					  	 <span>|</span>-->
-					  	 <span th:text="|Remainder: ${#numbers.formatCurrency(category.getRemaining)}|"></span>
-					  </div>
-					  <div class="col-sm-4 text-right" style = "float:right; font-size:15px;">
-					  	 <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/create (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
-					  	 	<i class="fas fa-plus" style="color:green; margin-right:6px">
-					  	 	</i>
-					  	 </a>
-					  	 <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/edit/{categoryId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
-				   		 <i class="fas fa-edit" style="color:cadetblue; margin-right:6px"></i>
-						 </a>
-					    
-					    <a type="button" data-toggle="modal" th:attr="data-target='#delete-category'+${category.id}">
-			 				<i class="fas fa-trash" style="color:orangered"></i>
-						</a>
-					 </div>
+					  <div class="col-sm-4 text-center"><span th:text="|${#numbers.formatCurrency(category.getRemaining)} left|"></span></div>
+					  <div class="col-sm-4 text-right"><span th:text="|${#numbers.formatCurrency(category.allocation)}|"></span></div>
 				 </div>
+				 <div class="progress">
+					<div class="progress-bar bg-info" role="progressbar"
+					  	th:style="|width: ${category.getPercentLeft()}%|" aria-valuemin="0" aria-valuemax="100"></div>
+					</div>
 				</div>
-				<div class="collapse" th:id="|collapse${category.id}|">
+				<div class="collapse show" th:id="|collapse${category.id}|">
 				  <div class="card-body">
-					    <table class="table table-striped">
-						  	<tbody>				    	
-						    	<tr th:each="transaction: ${category.transactions}" style="cursor:pointer;" th:id="|transaction-${transaction.id}|">
-							      <td style="width:1%">
-							         <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/edit/{tranId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id}, tranId = ${transaction.id})}">
-							   		 	<i class="fas fa-edit" style="color:cadetblue; margin-right:6px"></i>
-								 		 </a>
-									</td>
-							      <td style="width:15%" th:text="${#temporals.format(transaction.date, 'YYYY-MMM-dd')}"></td>
-							      <td style="width:15%" th:text="${#numbers.formatCurrency(transaction.amount)}"></td>
-							      <td class = "note" th:text="${transaction.note}"></td>
-							      <td style="width:1%">
-							      	<a type="button" data-toggle="modal" th:attr="data-target='#delete-transaction'+${transaction.id}">
-							 				<i class="fas fa-trash" style="color:orangered"></i>
-										</a>
-							      </td>
-							      
-							      <div class="modal fade" th:id="delete-transaction+${transaction.id}" tabindex="-1" role="dialog" 
-						          aria-labelledby="deleteTransactionModal" aria-hidden="true">
-									  <div class="modal-dialog modal-dialog-centered" role="document">
-									    <div class="modal-content">
-									      <div class="modal-header">
-									        <h5 class="modal-title" id="exampleModalLongTitle">Delete Transaction</h5>
-									        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									          <span aria-hidden="true">&times;</span>
-									        </button>
-									      </div>
-									      <div class="modal-body">
-									        Are you sure you want to delete this transaction?
-									      </div>
-									      <div class="modal-footer">
-									        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-									        <button type="button" th:id = "|delete_transaction_btn_${budgetId}_${group.id}_${category.id}_${transaction.id}|" class="btn btn-danger">Delete</button>
-									      </div>
-									    </div>
-									  </div>
-									</div>
-						    	</tr>
-							</tbody>
-						</table>
+				    <table class="table table-hover table-striped">
+					  	<tbody>
+					  		<tr th:each="transaction: ${category.transactions}" th:id="|transaction-${transaction.id}|" class='clickable-row'
+					  		  th:data-href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/edit/{tranId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id}, tranId = ${transaction.id})}">
+						      <td th:text="${#temporals.format(transaction.date, 'YYYY-MMM-dd')}"></td>
+						      <td th:text="${#numbers.formatCurrency(transaction.amount)}"></td>
+						      <td class = "note" th:text="${transaction.note}"></td>
+					    	</tr>
+						</tbody>
+					</table>
+					<a class="ml-1" type="button"
+					   th:href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/create (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
+				  	 	Add transaction
+				  	</a>
 				  </div>
 				</div>
-				
-				<div class="modal fade" th:id="delete-category+${category.id}" tabindex="-1" role="dialog" 
-	          aria-labelledby="deleteCategoryModal" aria-hidden="true">
-				  <div class="modal-dialog modal-dialog-centered" role="document">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <h5 class="modal-title" id="exampleModalLongTitle">Delete Category</h5>
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				          <span aria-hidden="true">&times;</span>
-				        </button>
-				      </div>
-				      <div class="modal-body">
-				        Are you sure you want to delete
-				        <span style="font-weight:bold" th:text="${category.name}|"/> 
-				        category?
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				        <button type="button" th:id = "|delete_category_btn_${budgetId}_${group.id}_${category.id}|" class="btn btn-danger">Delete</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>
-			
 			 </div>
+			 
+			 <div class="row mt-2">
+			 	 <div class="col-sm-6 text-left">
+					 <a type="button" class="btn btn-outline-primary" th:href="@{/budget/{budgetId}/group/{groupId}/category/create (budgetId = ${budget.id}, groupId = ${group.id})}">
+				  	 	<i class="fa fa-plus-square-o"></i> <span>Add category</span>
+				  	 </a>
+			  	 </div>
+		  	 </div>
 		  </div>
-		  
-		  <div class="modal fade" th:id="delete-group+${group.id}" tabindex="-1" role="dialog" 
-	          aria-labelledby="deleteGroupModal" aria-hidden="true">
-			  <div class="modal-dialog modal-dialog-centered" role="document">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <h5 class="modal-title" id="exampleModalLongTitle">Delete Group</h5>
-			        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-			          <span aria-hidden="true">&times;</span>
-			        </button>
-			      </div>
-			      <div class="modal-body">
-			        Are you sure you want to delete
-			        <span style="font-weight:bold" th:text="${group.name}|"/> 
-			        group?
-			      </div>
-			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-			        <button type="button" th:id = "|delete_group_btn_${budgetId}_${group.id}|" class="btn btn-danger">Delete</button>
-			      </div>
-			    </div>
-			  </div>
-			</div>
-		  
+		</div>
+		
+		<a type="button" th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" class="btn btn-outline-primary btn-lg btn-block shadowed mt-3">
+			Add group
+		</a>
+		
+		<hr/>
+		<div class="row mb-4">
+			<div class="col-sm-6 text-left">&#169 Kmercoders 2024</div>
+			<div class="col-sm-6 text-right"><i class="fab fa-github"></i></div>
 		</div>
 	</div>	
+	<th:block th:replace="fragments/header :: scripts"></th:block>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script src="/js/main.js"></script>
 </body>
-
 </html>
