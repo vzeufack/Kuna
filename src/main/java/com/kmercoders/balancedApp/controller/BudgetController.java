@@ -2,6 +2,9 @@ package com.kmercoders.balancedApp.controller;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.TextStyle;
+import java.util.Comparator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -39,14 +42,29 @@ public class BudgetController {
    private GroupService groupService;
    
    @Autowired
-   private PaymentMethodService paymentMethodService;
-  
+   private PaymentMethodService paymentMethodService;  
 
    @GetMapping(value = { "list"})
    public String showBudgets(@AuthenticationPrincipal User user, ModelMap model) {
       TreeSet<Budget> budgets = budgetService.getBudgets(user);
+      int i = 0;
+      Map<String, Double> balances = new TreeMap<>(
+		  new Comparator<String>() {
+	          @Override
+	          public int compare(String s1, String s2) {
+	              return 1;
+	          }
+	      });
+      
+      for(Budget budget: budgets) {
+    	  String month = budget.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + "-" + budget.getYear();
+    	  balances.put(month, budget.getTotalRemaining().doubleValue());
+    	  if(i++ == 12)
+    		  break;
+      } 
 
       model.put("budgets", budgets);
+      model.put("chartData", balances);
       return "budget/list";
    }
 

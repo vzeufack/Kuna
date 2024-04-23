@@ -31,11 +31,6 @@ public class Budget implements Comparable<Budget>{
    @OrderBy("id ASC")
    private Set<Group> groups = new TreeSet<>();
    
-   //@ManyToMany
-   //@JoinTable(name = "user_budget", inverseJoinColumns = @JoinColumn(name = "budget_id"), joinColumns = @JoinColumn(name = "user_id"))
-   //@JsonIgnore
-   //private Set <User> users = new TreeSet<>();
-   
    @ManyToOne
    private User user;
    
@@ -148,6 +143,10 @@ public class Budget implements Comparable<Budget>{
    
    @Override
    public int compareTo(Budget budget) {
-       return this.id.compareTo(budget.getId());
+	   int yearComparison = this.getYear() - budget.getYear();
+	   if(yearComparison != 0)
+		   return yearComparison;
+	   else
+		   return this.getMonth().getValue() - budget.getMonth().getValue();
    }
 }

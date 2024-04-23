@@ -2,13 +2,13 @@ $(".clickable-row").click(function() {
 	window.location = $(this).data("href");
 });
 
-var real_data = /*[[${chartData}]]*/'noValue';
 $(document).ready(function() {
     google.charts.load('current', {
         packages : [ 'corechart', 'bar' ]
     });
     google.charts.setOnLoadCallback(drawColumnChart);
     google.charts.setOnLoadCallback(drawPieChart);
+    google.charts.setOnLoadCallback(drawLineChart);
 });
 
 function drawColumnChart() {
@@ -52,3 +52,27 @@ function drawPieChart() {
             .getElementById('piechart'));
     chart.draw(data, options);
 }
+
+function drawLineChart() {
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Month');
+    data.addColumn('number', 'Balance');
+    Object.keys(real_data).forEach(function(key) {
+        data.addRow([ key, real_data[key] ]);
+    });
+    var options = {
+        title : 'Balances for last 12 months',
+        fontName: 'Bree Serif, cursive',
+        legend: {position: 'none'},
+        height: 300,
+        vAxis: { format: 'currency' }
+    };
+    var chart = new google.visualization.LineChart(document.getElementById('line_chart_div'));
+    chart.draw(data, options);
+}
+
+$(document).ready(function(){
+	$('#myTable').DataTable({ 
+		order: [[0, "desc"]] 
+	});
+});

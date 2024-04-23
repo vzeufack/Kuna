@@ -34,7 +34,6 @@ public class User {
    @Transient
    private String confirmPassword;
    
-   //@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users")
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
    private Set<Budget> budgets = new TreeSet<>();
    

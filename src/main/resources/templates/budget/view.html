@@ -99,7 +99,7 @@
 				  <div class="card-body">
 				    <table class="table table-hover table-striped">
 					  	<tbody>
-					  		<tr th:each="transaction: ${category.transactions}" th:id="|transaction-${transaction.id}|" class='clickable-row'
+					  		<tr th:each="transaction: ${category.transactions}" class='clickable-row'
 					  		  th:data-href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/edit/{tranId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id}, tranId = ${transaction.id})}">
 						      <td th:text="${#temporals.format(transaction.date, 'YYYY-MMM-dd')}"></td>
 						      <td th:text="${#numbers.formatCurrency(transaction.amount)}"></td>
@@ -125,15 +125,9 @@
 		  </div>
 		</div>
 		
-		<a type="button" th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" class="btn btn-outline-primary btn-lg btn-block shadowed mt-3">
+		<a type="button" th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" class="btn btn-outline-primary btn-lg btn-block shadowed mt-3 mb-3">
 			Add group
 		</a>
-		
-		<hr/>
-		<div class="row mb-4">
-			<div class="col-sm-6 text-left">&#169 Kmercoders 2024</div>
-			<div class="col-sm-6 text-right"><i class="fab fa-github"></i></div>
-		</div>
 	</div>	
 	<th:block th:replace="fragments/header :: scripts"></th:block>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
