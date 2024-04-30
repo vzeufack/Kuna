@@ -52,7 +52,7 @@
 					  		  
 			<tbody>
 				<tr th:each="budget : ${budgets}" class='clickable-row' th:data-href="@{/budget/view/{budgetId} (budgetId = ${budget.id})}">
-				  <td th:text="|${budget.year} / ${budget.month.getValue}|"></td>
+				  <td th:text="|${budget.year} / ${#numbers.formatInteger(budget.month.getValue, 2)}|"></td>
 			      <td th:text="${#numbers.formatCurrency(budget.getTotalIncome)}"></td>
 			      <td th:text="${#numbers.formatCurrency(budget.getTotalSpent)}"></td>
 			      <td th:text="${#numbers.formatCurrency(budget.getTotalRemaining)}"></td>

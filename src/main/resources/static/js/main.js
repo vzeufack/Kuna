@@ -58,4 +58,9 @@ $(function () {
 	        }
 	    });
 	});
+	
+	$("button[id*='delete_budget_btn']").click(function () {
+		var budgetId = $(this).prop('id').split('_')[3];
+		window.location.href = '/budget/delete/' + budgetId;
+	});
 });

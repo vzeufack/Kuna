@@ -125,6 +125,12 @@
 		<a type="button" th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" class="btn btn-outline-primary btn-lg btn-block shadowed mt-3 mb-3">
 			Add group
 		</a>
+		
+		<button type="button" data-toggle="modal" th:attr="data-target='#delete-budget'+${budget.id}" class="btn btn-outline-danger btn-lg btn-block shadowed mt-3 mb-3">
+			Detele budget
+		</button>
+		
+		<th:block th:replace="fragments/modals :: delete-budget-modal"></th:block>		
 	</div>	
 	<th:block th:replace="fragments/header :: scripts"></th:block>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
