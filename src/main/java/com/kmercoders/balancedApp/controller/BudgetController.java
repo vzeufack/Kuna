@@ -3,7 +3,9 @@ package com.kmercoders.balancedApp.controller;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +15,7 @@ import java.util.TreeSet;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,7 +24,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kmercoders.balancedApp.model.Budget;
 import com.kmercoders.balancedApp.model.Category;
@@ -61,28 +66,43 @@ public class BudgetController {
     	  balances.put(month, budget.getTotalRemaining().doubleValue());
     	  if(i++ == 12)
     		  break;
-      } 
+      }
 
       model.put("budgets", budgets);
       model.put("chartData", balances);
-      return "budget/list";
-   }
-
-   @GetMapping(value = "create")
-   public String showBudgetCreationForm(ModelMap model) {
-      Budget budget = new Budget();
-      model.addAttribute("budget", budget);
+      
       model.addAttribute("months", Month.values());
       model.addAttribute("currentMonth", LocalDate.now().getMonth());
       model.addAttribute("currentYear", LocalDate.now().getYear());
-      return "budget/create";
+      
+      return "budget/list";
    }
-
+   
    @PostMapping(value = "create")
-   public String createBudget(@AuthenticationPrincipal User user, ModelMap model, @ModelAttribute("budget") @Valid Budget budget, BindingResult result) {
-      if (result.hasErrors()) {
+   public ResponseEntity<?> createBudget(@RequestBody Budget budget, @AuthenticationPrincipal User user) {	   
+	   try {
+         if(budgetService.getBudgets(user).isEmpty())
+            addDefaultGroups(budget);
+         else
+            copyGroupsFromLastBudget(budget, user);
+         
+         budget = budgetService.save(user, budget);
+         
+      } catch (Exception e) {
+    	  e.printStackTrace();
+    	  return ResponseEntity.badRequest().body(budget);
+      }
+	   
+      return ResponseEntity.ok(budget);
+   }
+   
+   @PostMapping(value = "list")
+   public String createBudgetList(@AuthenticationPrincipal User user, ModelMap model, @ModelAttribute("budget") @Valid Budget budget, BindingResult result) {
+	   TreeSet<Budget> budgets = budgetService.getBudgets(user);
+	   
+	   if (result.hasErrors() || budgets.contains(budget)) {
          feedModel(model, budget);
-         return "budget/create";
+         return "budget/list";
       }
 
       try {
@@ -96,7 +116,7 @@ public class BudgetController {
          e.printStackTrace();
          feedModel(model, budget);
          model.addAttribute("isDuplicate", true);
-         return "budget/create";
+         return "budget/list";
       }
       return "redirect:/budget/list";
    }
@@ -125,40 +145,6 @@ public class BudgetController {
       model.put("budget", budget);
       
       return "budget/transactionsByPaymentMethod";
-   }
-
-   @GetMapping(value = "edit/{budgetId}")
-   public String showEditBudgetForm(ModelMap model, @PathVariable Long budgetId) {
-      Budget budget = budgetService.findById(budgetId).get();
-
-      feedModel(model, budget);
-
-      return "budget/edit";
-   }
-
-   @PostMapping(value = "edit/{budgetId}")
-   public String updateBudget(@AuthenticationPrincipal User user, ModelMap model, @ModelAttribute("budget") @Valid Budget budget, BindingResult result,
-         @PathVariable Long budgetId) {
-      Budget budgetFromDB = budgetService.findById(budgetId).get();
-
-      if (result.hasErrors()) {
-         budget.setId(budgetId);
-         feedModel(model, budget);
-         return "budget/edit";
-      }
-
-      budgetFromDB.setMonth(budget.getMonth());
-      budgetFromDB.setYear(budget.getYear());
-
-      try {
-         budgetService.save(user, budgetFromDB);
-      } catch (Exception e) {
-         budget.setId(budgetId);
-         feedModel(model, budget);
-         model.addAttribute("isDuplicate", true);
-         return "budget/edit";
-      }
-      return "redirect:/budget/list";
    }
 
    @RequestMapping("delete/{budgetId}")

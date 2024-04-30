@@ -6,52 +6,13 @@ $(document).ready(function() {
     google.charts.load('current', {
         packages : [ 'corechart', 'bar' ]
     });
-    google.charts.setOnLoadCallback(drawColumnChart);
-    google.charts.setOnLoadCallback(drawPieChart);
+    
     google.charts.setOnLoadCallback(drawLineChart);
+    
+    $('#myTable').DataTable({ 
+		order: [[0, "desc"]] 
+	});
 });
-
-function drawColumnChart() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Groups');
-    data.addColumn('number', 'Amount Left');
-    Object.keys(real_data).forEach(function(key) {
-        data.addRow([ key, real_data[key] ]);
-    });
-    var options = {
-        //title : 'Blog stats',
-        hAxis : {
-            slantedText:true,
-            slantedTextAngle: 60
-        },
-        vAxis : {
-            title : 'Amount Left'
-        },
-        colors: ['#24a0ed'],
-        fontName: 'Segoe UI',
-        height: 400,
-        //width: 800,
-        bar: {groupWidth: "50%"}
-    };
-    var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-}
-
-function drawPieChart() {
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Group');
-    data.addColumn('number', 'Amount');
-    Object.keys(real_data).forEach(function(key) {
-        data.addRow([ key, real_data[key] ]);
-    });
-    var options = {
-        title : 'Blog stats',
-        is3D: true
-    };
-    var chart = new google.visualization.PieChart(document
-            .getElementById('piechart'));
-    chart.draw(data, options);
-}
 
 function drawLineChart() {
     var data = new google.visualization.DataTable();
@@ -64,15 +25,37 @@ function drawLineChart() {
         title : 'Balances for last 12 months',
         fontName: 'Bree Serif, cursive',
         legend: {position: 'none'},
-        height: 300,
-        vAxis: { format: 'currency' }
+        height: 350,
+        vAxis: { format: 'currency' },
+        hAxis : {
+            slantedText:true,
+            slantedTextAngle: 60
+        }
     };
     var chart = new google.visualization.LineChart(document.getElementById('line_chart_div'));
     chart.draw(data, options);
 }
 
-$(document).ready(function(){
-	$('#myTable').DataTable({ 
-		order: [[0, "desc"]] 
+$(function () {
+	$("button[id*='create-budget']").click(function () {
+		var year = $('#year').val();
+		var month = $('#month').val();
+		
+		$.ajax({
+	        type: "POST",
+	        contentType: "application/json",
+	        url: "/budget/create",
+	        data: JSON.stringify({"month": month, "year": year}),
+	        dataType: 'json',
+	        cache: false,
+	        timeout: 600000,
+	        success: function (data) {
+				document.getElementById("add-budget-error").style.display = "none";
+			    window.location.href = '/budget/view/' + data.id;		
+	        },
+	        error: function (e) {
+				document.getElementById("add-budget-error").style.display = "block";		
+	        }
+	    });
 	});
 });

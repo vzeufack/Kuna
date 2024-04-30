@@ -1,7 +1,3 @@
-body{
-	background-color:ghostwhite;
-}
-
 .shadowed{
 	box-shadow: rgb(128, 128, 128) 0px 2px 5px;
 }
@@ -86,4 +82,22 @@ btn-outline-primary{
 	border-radius: 20px;
 	width: 170px;
 	color: white !important
+}
+
+.bree-serif{
+	font-weight: bold;
+	font-family: Bree Serif, cursive;
+}
+
+.bree-serif-normal{
+	font-family: Bree Serif, cursive;
+}
+
+label{
+	margin-bottom: 0px;
+	font-weight: bold;
+}
+
+.alert{
+	display:none
 }

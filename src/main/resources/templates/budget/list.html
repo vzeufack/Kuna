@@ -10,8 +10,8 @@
 
 <body>
    <div class="container">
-	   <nav class="navbar navbar-expand-lg bg-white border-bottom shadowed">
-		  <a class="navbar-brand my-anchor" id="logo" href="#">Nkap <i class='fas fa-coins'></i></a>
+	   <nav th:fragment = "logo" class="navbar navbar-expand-lg bg-white border-bottom shadowed">
+		  <a class="navbar-brand my-anchor" id="logo" href="/budget/list">Nkap <i class='fas fa-coins'></i></a>
 		  <ul class="navbar-nav mr-auto">
 		  </ul>
 		  <ul class="navbar-nav">
@@ -31,10 +31,12 @@
 		    </ul>
 		    <ul class="navbar-nav" id="menu">
 		      <li class="nav-item">
-		        <a class="nav-link btn btn-primary" href="/budget/create">Add budget</i></a>
+		        <button type="button" class="nav-link btn btn-primary" data-toggle="modal" data-target="#add-budget-modal">Add budget</button>
 		      </li>
 		    </ul>
 		</nav>
+		
+		<div th:replace="fragments/modals :: add-budget-modal"></div>
 		
 		<div class="shadowed mb-3" id="line_chart_div"></div>
 	
@@ -56,7 +58,7 @@
 			      <td th:text="${#numbers.formatCurrency(budget.getTotalRemaining)}"></td>
 		    	</tr>
 	    	</tbody>
-		</table>	
+		</table>
 	</div>
 	<div th:replace="fragments/header.html :: scripts"></div>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>

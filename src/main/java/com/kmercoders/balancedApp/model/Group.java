@@ -14,6 +14,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "grp")
 public class Group implements Comparable<Group> {
@@ -25,6 +27,7 @@ public class Group implements Comparable<Group> {
    private String name;
    
    @ManyToOne
+   @JsonIgnore
    private Budget budget;
    
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "group")

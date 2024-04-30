@@ -38,7 +38,7 @@
 		    </ul>
 		</nav>
 		
-		<div class="row mt-3">
+		<div class="row mt-4">
 			<div class="col-md-3">
 				<div class="col-md-12 stat">
 					<div>Total income</div>
@@ -65,10 +65,7 @@
 			</div>
 		</div>
 		
-		<!--<div id="chart_div"></div>-->
-		<!--<div class="row" id="piechart" style="text-align:center; width: 1000px; height: 250px;"></div>-->
-		
-		<div class="card shadowed mt-3" th:each="group : ${budget.groups}">
+		<div class="card shadowed mt-4" th:each="group : ${budget.groups}">
 		  <div class="card-header">
 		  	<a type="button" th:if="${group.name} != 'income'" th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}">
 		  	  <span class="my-anchor group-name" th:text="${#strings.capitalize(#strings.toLowerCase(group.name))}"></span>
@@ -76,7 +73,7 @@
 		  	<span class="group-name" th:if="${group.name} == 'income'" th:text="${#strings.capitalize(#strings.toLowerCase(group.name))}"></span>
 		  </div>
 		  <div class="card-body">
-		    <div class="card mb-3" th:each="category: ${group.categories}">
+		    <div class="card mb-3 shadowed" th:each="category: ${group.categories}">
 		    	<div class="card-header">
 		    	  <div class = "row">
 			    	  <div class="col-sm-4">
