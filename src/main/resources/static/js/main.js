@@ -54,6 +54,7 @@ $(function () {
 			    window.location.href = '/budget/view/' + data.id;		
 	        },
 	        error: function (e) {
+			    alert(e.id);
 				document.getElementById("add-budget-error").style.display = "block";		
 	        }
 	    });
@@ -63,4 +64,24 @@ $(function () {
 		var budgetId = $(this).prop('id').split('_')[3];
 		window.location.href = '/budget/delete/' + budgetId;
 	});
+});
+
+$(function () {
+	$('#create-group-btn').click(function (e) {
+        e.preventDefault();        
+	    
+        $.post({
+            url: create_group_url,
+            data: $('#createGroupForm').serialize(),
+            success: function (res) {
+                if (res.validated) {
+					location.reload();
+                } else {
+                    $.each(res.errorMessages, function (key, value) {
+                        $('input[name=' + key + ']').after('<div class="alert alert-warning text-center mt-3 mb-0">' + value + '</div>');
+                    });
+                }
+            }
+        })
+    });
 });

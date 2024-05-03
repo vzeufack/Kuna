@@ -40,8 +40,7 @@
 	      </div>
 	      
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <button id="create-budget" class="btn btn-primary">Submit</button>
+	        <button id="create-budget" class="btn btn-primary col-md-3 ml-auto">Submit</button>
 	      </div>
 	    </div>
 	  </div>
@@ -52,7 +51,7 @@
 	  <div class="modal-dialog modal-dialog-centered" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLongTitle">Delete budget</h5>
+	        <h5 class="modal-title bree-serif-normal" id="exampleModalLongTitle">Delete budget</h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
@@ -63,9 +62,37 @@
 	        budget?
 	      </div>
 	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
 	        <button type="button" th:id = "|delete_budget_btn_${budget.id}|" class="btn btn-danger">Delete</button>
 	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- Add group modal -->
+	<div th:fragment = "add-group-modal" class="modal fade" id="add-group-modal" tabindex="-1" role="dialog" aria-labelledby="addGroupModal" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title bree-serif-normal">Add Group</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <form id="createGroupForm" th:action="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}">
+		      <div class="modal-body">
+				 <div class="form-group">
+					<label for="name">Name</label>
+					<input type="text" class="form-control" name="name">
+					<!--<div id="add-group-error" class="alert alert-warning text-center mt-3 mb-0" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>-->
+				 </div>
+			     <!--<div id="add-group-error" class="alert alert-warning text-center mt-3 mb-0" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>-->
+		      </div>
+		      
+		      <div class="modal-footer">
+		        <button id="create-group-btn" class="btn btn-primary col-md-3 ml-auto">Submit</button>
+		      </div>
+	      </form>
 	    </div>
 	  </div>
 	</div>

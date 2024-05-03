@@ -54,12 +54,8 @@
 	padding-top: 5%
 }
 
-#menu a{
-	color:black;
-}
-
 .nav-item.active{
-	background-color:rgb(225, 225, 225);
+	background-color:rgb(230, 230, 230);
 	border-radius: 5px;
 }
 
@@ -98,6 +94,6 @@ label{
 	font-weight: bold;
 }
 
-.alert{
+#add-budget-error{
 	display:none
 }

@@ -122,10 +122,11 @@
 		  </div>
 		</div>
 		
-		<a type="button" th:href="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}" class="btn btn-outline-primary btn-lg btn-block shadowed mt-3 mb-3">
+		<a type="button" data-toggle="modal" data-target="#add-group-modal"  class="btn btn-outline-primary btn-lg btn-block shadowed mt-3 mb-3">
 			Add group
 		</a>
-		
+		<th:block th:replace="fragments/modals :: add-group-modal"></th:block>
+
 		<button type="button" data-toggle="modal" th:attr="data-target='#delete-budget'+${budget.id}" class="btn btn-outline-danger btn-lg btn-block shadowed mt-3 mb-3">
 			Detele budget
 		</button>
@@ -134,7 +135,10 @@
 	</div>	
 	<th:block th:replace="fragments/header :: scripts"></th:block>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script th:inline="javascript">
+		var budget_id = /*[[${budget.id}]]*/'noValue';
+		var create_group_url = '/budget/' + budget_id + '/group/create';
+	</script>
 	<script src="/js/main.js"></script>
 </body>
 </html>

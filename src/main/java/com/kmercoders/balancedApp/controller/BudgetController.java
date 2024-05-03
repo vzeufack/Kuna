@@ -123,13 +123,6 @@ public class BudgetController {
       Budget budget = budgetService.findById(budgetId).get();      
       model.put("budget", budget);
       
-      Map<String, Double> graphData = new TreeMap<>();
-      for(Group group: budget.getGroups()) {
-    	  if(!group.getName().equalsIgnoreCase("income"))
-    		  graphData.put(group.getName(), group.getTotalLeft().doubleValue());  
-      }
-      model.addAttribute("chartData", graphData);
-      
       return "budget/view";
    }
    
@@ -178,21 +171,6 @@ public class BudgetController {
       
       Group food = new Group(++maxGroupId, "food");
       defaultGroups.add(food);
-      
-      Group health = new Group(++maxGroupId, "health");
-      defaultGroups.add(health);
-      
-      Group insurance = new Group(++maxGroupId, "insurance");
-      defaultGroups.add(insurance);
-      
-      Group debt = new Group(++maxGroupId, "debt");
-      defaultGroups.add(debt);
-      
-      Group giving = new Group(++maxGroupId, "giving");
-      defaultGroups.add(giving);
-      
-      Group miscellanious = new Group(++maxGroupId, "miscellanious");
-      defaultGroups.add(miscellanious);
       
       for(Group grp: defaultGroups) {
          grp.setBudget(budget);
