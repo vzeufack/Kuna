@@ -79,18 +79,42 @@
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
-	      <form id="createGroupForm" th:action="@{/budget/{budgetId}/group/create (budgetId = ${budget.id})}">
+	      <form id="createGroupForm">
 		      <div class="modal-body">
 				 <div class="form-group">
 					<label for="name">Name</label>
 					<input type="text" class="form-control" name="name">
-					<!--<div id="add-group-error" class="alert alert-warning text-center mt-3 mb-0" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>-->
 				 </div>
-			     <!--<div id="add-group-error" class="alert alert-warning text-center mt-3 mb-0" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>-->
 		      </div>
 		      
 		      <div class="modal-footer">
 		        <button id="create-group-btn" class="btn btn-primary col-md-3 ml-auto">Submit</button>
+		      </div>
+	      </form>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- Edit group modal -->
+	<div th:fragment = "edit-group-modal (id)" class="modal fade" th:id="|edit-group-modal-${group.id}|" tabindex="-1" role="dialog" aria-labelledby="editGroupModal" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title bree-serif-normal">Edit Group</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <form th:id="|editGroupForm${group.id}|">
+		      <div class="modal-body">
+				 <div class="form-group">
+					<label for="name">Name</label>
+					<input type="text" class="form-control" th:value="${group.name}" name="name"/>
+				 </div>
+		      </div>
+		      
+		      <div class="modal-footer">
+		        <button th:id="|edit-group-btn-${group.id}|" class="btn btn-primary col-md-3 ml-auto">Submit</button>
 		      </div>
 	      </form>
 	    </div>

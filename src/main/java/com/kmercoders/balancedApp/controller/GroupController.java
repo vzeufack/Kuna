@@ -64,34 +64,25 @@ public class GroupController {
        return response;
    }
    
-   @GetMapping(value = "edit/{groupId}")
-   public String showEditGroupForm(ModelMap model, @PathVariable Long groupId, @PathVariable Long budgetId) {
-      Group group = groupService.findById(groupId).get();
-      Budget budget = budgetService.findById(budgetId).get();
-      
-      model.addAttribute("group", group);
-      model.addAttribute("budget", budget);
-      
-      return "group/edit";
-   }
-   
    @PostMapping(value = "edit/{groupId}")
-   public String updateGroup(ModelMap model, @ModelAttribute("group") @Valid Group group, BindingResult result,
-         @PathVariable Long groupId, @PathVariable Long budgetId) {
-      Group groupFromDB = groupService.findById(groupId).get();
-      Budget budget = budgetService.findById(budgetId).get();
+   @ResponseBody
+   public GroupResponse updateGroup(@ModelAttribute @Valid Group group, BindingResult result, @PathVariable Long groupId, @PathVariable Long budgetId) {	   
+	   GroupResponse response = new GroupResponse();
+	   
+       if (result.hasErrors()) {
+    	  Map<String, String> errors = result.getFieldErrors().stream()
+              .collect( Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
 
-      if (result.hasErrors()) {
-         group.setId(groupId);
-         model.addAttribute("group", group);
-         model.addAttribute("budget", budget);
-         return "group/edit";
-      }
-      
-      groupFromDB.setName(group.getName());
-      groupService.save(groupFromDB);
-      
-      return "redirect:/budget/view/" + budgetId;
+           response.setValidated(false);
+           response.setErrorMessages(errors);
+       } else {
+           response.setValidated(true);
+           Group groupFromDB = groupService.findById(groupId).get();
+           groupFromDB.setName(group.getName());
+           groupService.save(groupFromDB);
+       }
+       
+       return response;
    }
    
    @RequestMapping("delete/{groupId}")

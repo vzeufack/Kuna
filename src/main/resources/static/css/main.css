@@ -20,6 +20,11 @@
 	font-size:20px;
 }
 
+a .group-name:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 #toggle-bars{
 	text-decoration: none;
 }
