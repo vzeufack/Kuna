@@ -54,7 +54,6 @@ $(function () {
 			    window.location.href = '/budget/view/' + data.id;		
 	        },
 	        error: function (e) {
-			    alert(e.id);
 				document.getElementById("add-budget-error").style.display = "block";		
 	        }
 	    });
@@ -68,7 +67,8 @@ $(function () {
 
 $(function () {
 	$('#create-group-btn').click(function (e) {
-        e.preventDefault();  
+        e.preventDefault();
+        var create_group_url = '/budget/' + budget_id + '/group/create';
         
         $('input').next('div').remove();
 	    
@@ -90,7 +90,7 @@ $(function () {
     $("button[id*='edit-group-btn']").click(function (e) {
         e.preventDefault(); 
         var group_id = $(this).prop('id').split('-')[3];
-        var edit_group_url = edit_group_url_prefix + group_id;
+        var edit_group_url = '/budget/' + budget_id + '/group/edit/' + group_id;
         var form_id = '#editGroupForm' + group_id;
         
         $('input').next('div').remove();
@@ -106,6 +106,20 @@ $(function () {
                         $('input[name=' + key + ']').after('<div class="alert alert-warning text-center mt-3 mb-0">' + value + '</div>');
                     });
                 }
+            }
+        })
+    });
+    
+    $("button[id*='delete-group-btn']").click(function (e) {
+        e.preventDefault(); 
+        var group_id = $(this).prop('id').split('-')[3];
+        var delete_group_url = '/budget/' + budget_id + '/group/delete/' + group_id;
+	    
+        $.post({
+            url: delete_group_url,
+            data: group_id,
+            success: function (res) {
+				location.reload();
             }
         })
     });

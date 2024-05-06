@@ -66,16 +66,15 @@
 		</div>
 		
 		<div class="card shadowed mt-4" th:each="group : ${budget.groups}">
-		  <div class="card-header">
-		  	<!--th:href="@{/budget/{budgetId}/group/edit/{groupId} (budgetId = ${budget.id}, groupId = ${group.id})}"-->
-		  	
+		  <div class="card-header">		  	
 		  	<a type="button" th:if="${group.name} != 'income'" data-toggle="modal" th:attr="data-target='#edit-group-modal-'+${group.id}">
 		  	  <span class="group-name" th:text="${#strings.capitalize(#strings.toLowerCase(group.name))}"></span>
 		  	</a>
 		  	<span class="group-name" th:if="${group.name} == 'income'" th:text="${#strings.capitalize(#strings.toLowerCase(group.name))}"></span>
 		  </div>
 		  
-		  <th:block th:replace="fragments/modals :: edit-group-modal(id=${group.id})"></th:block>
+		  <th:block th:replace="group :: edit-group-modal(id=${group.id})"></th:block>
+		  <th:block th:replace="group :: delete-group-modal(id=${group.id})"></th:block>
 		  
 		  <div class="card-body">
 		    <div class="card mb-3 shadowed" th:each="category: ${group.categories}">
@@ -120,9 +119,14 @@
 			 <div class="row mt-2">
 			 	 <div class="col-sm-6 text-left">
 					 <a type="button" class="btn btn-outline-primary" th:href="@{/budget/{budgetId}/group/{groupId}/category/create (budgetId = ${budget.id}, groupId = ${group.id})}">
-				  	 	<i class="fa fa-plus-square-o"></i> <span>Add category</span>
+				  	 	Add category
 				  	 </a>
 			  	 </div>
+			  	 <div class="col-sm-6 text-right">
+				  	 <button type="button" th:if="${group.name} != 'income'" data-toggle="modal" th:attr="data-target='#delete-group-modal-'+${group.id}" class="btn btn-outline-danger">
+		 				Delete group
+					 </button>
+				</div>
 		  	 </div>
 		  </div>
 		</div>
@@ -130,20 +134,18 @@
 		<a type="button" data-toggle="modal" data-target="#add-group-modal" class="btn btn-outline-primary btn-lg btn-block shadowed mt-3 mb-3">
 			Add group
 		</a>
-		<th:block th:replace="fragments/modals :: add-group-modal"></th:block>
+		<th:block th:replace="group :: add-group-modal"></th:block>
 
 		<button type="button" data-toggle="modal" th:attr="data-target='#delete-budget'+${budget.id}" class="btn btn-outline-danger btn-lg btn-block shadowed mt-3 mb-3">
 			Detele budget
 		</button>
 		
-		<th:block th:replace="fragments/modals :: delete-budget-modal"></th:block>		
+		<th:block th:replace="budget/modals :: delete-budget-modal"></th:block>		
 	</div>	
 	<th:block th:replace="fragments/header :: scripts"></th:block>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script th:inline="javascript">
 		var budget_id = /*[[${budget.id}]]*/'noValue';
-		var create_group_url = '/budget/' + budget_id + '/group/create';
-		var edit_group_url_prefix = '/budget/' + budget_id + '/group/edit/';
 	</script>
 	<script src="/js/main.js"></script>
 </body>

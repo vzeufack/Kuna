@@ -77,7 +77,7 @@ public class BudgetController {
    
    @PostMapping(value = "create")
    public ResponseEntity<?> createBudget(@RequestBody Budget budget, @AuthenticationPrincipal User user) {	   
-	   try {
+	  try {
          if(budgetService.getBudgets(user).isEmpty())
             addDefaultGroups(budget);
          else

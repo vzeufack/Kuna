@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -85,9 +86,15 @@ public class GroupController {
        return response;
    }
    
-   @RequestMapping("delete/{groupId}")
-   public String deleteGroup(@PathVariable Long groupId, @PathVariable Long budgetId) {
-      groupService.delete(groupId);
-      return "redirect:/budget/view/" + budgetId;
+   @PostMapping(value = "delete/{groupId}")
+   public ResponseEntity<?> deleteGroup(@PathVariable Long groupId, @PathVariable Long budgetId) {	   
+	   try {
+		   groupService.delete(groupId);	       
+	    } catch (Exception e) {
+	  	  e.printStackTrace();
+	  	  return ResponseEntity.badRequest().body(groupId);
+	    }
+		   
+	    return ResponseEntity.ok(groupId);
    }
 }
