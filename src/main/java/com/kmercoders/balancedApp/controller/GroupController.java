@@ -33,16 +33,6 @@ public class GroupController {
    @Autowired
    private BudgetService budgetService;
    
-   @GetMapping(value = "create")
-   public String showGroupCreationForm(ModelMap model, @PathVariable Long budgetId) {
-      Group group = new Group();
-      Budget budget = budgetService.findById(budgetId).get();
-      
-      model.put("group", group);
-      model.addAttribute("budget", budget);
-      return "group/create";
-   }
-   
    @PostMapping(value = "create")
    @ResponseBody
    public GroupResponse createGroup(@ModelAttribute @Valid Group group, BindingResult result, @PathVariable Long budgetId) {	   

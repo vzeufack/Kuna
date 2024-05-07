@@ -80,7 +80,7 @@ $(function () {
 					location.reload();
                 } else {
                     $.each(res.errorMessages, function (key, value) {
-                        $('input[name=' + key + ']').after('<div class="alert alert-warning text-center mt-3 mb-0">' + value + '</div>');
+                        $('input[name=' + key + ']').after('<div class="alert alert-warning text-center mt-1 mb-0">' + value + '</div>');
                     });
                 }
             }
@@ -103,7 +103,7 @@ $(function () {
 					location.reload();
                 } else {
                     $.each(res.errorMessages, function (key, value) {
-                        $('input[name=' + key + ']').after('<div class="alert alert-warning text-center mt-3 mb-0">' + value + '</div>');
+                        $('input[name=' + key + ']').after('<div class="alert alert-warning text-center mt-1 mb-0">' + value + '</div>');
                     });
                 }
             }
@@ -120,6 +120,31 @@ $(function () {
             data: group_id,
             success: function (res) {
 				location.reload();
+            }
+        })
+    });
+});
+
+$(function () {
+	$("button[id*='create-category-btn']").click(function (e) {
+        e.preventDefault();
+        var group_id = $(this).prop('id').split('-')[3];
+        var create_category_url = '/budget/' + budget_id + '/group/' + group_id + '/category/create';
+        
+        $('input').next('div').remove();
+        form_id = '#createCategoryForm' + group_id;
+	    
+        $.post({
+            url: create_category_url,
+            data: $(form_id).serialize(),
+            success: function (res) {
+                if (res.validated) {
+					location.reload();
+                } else {
+                    $.each(res.errorMessages, function (key, value) {
+                        $('input[name=' + key + ']').after('<div class="alert alert-warning text-center mt-1 mb-0">' + value + '</div>');
+                    });
+                }
             }
         })
     });

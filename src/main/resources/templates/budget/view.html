@@ -118,10 +118,12 @@
 			 
 			 <div class="row mt-2">
 			 	 <div class="col-sm-6 text-left">
-					 <a type="button" class="btn btn-outline-primary" th:href="@{/budget/{budgetId}/group/{groupId}/category/create (budgetId = ${budget.id}, groupId = ${group.id})}">
+					 <button type="button" class="btn btn-outline-primary" data-toggle="modal" th:attr="data-target='#add-category-modal-'+${group.id}">
 				  	 	Add category
-				  	 </a>
+				  	 </button>
 			  	 </div>
+			  	 <th:block th:replace="category :: add-category-modal (group_id = ${group.id})"></th:block>
+			  	 
 			  	 <div class="col-sm-6 text-right">
 				  	 <button type="button" th:if="${group.name} != 'income'" data-toggle="modal" th:attr="data-target='#delete-group-modal-'+${group.id}" class="btn btn-outline-danger">
 		 				Delete group

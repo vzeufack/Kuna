@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -27,7 +29,8 @@ public class Category implements Comparable<Category> {
    private String name;
    
    @NotNull(message = "Please provide an allocation for this category")
-   @Min(value = 0)
+   @DecimalMin(value = "0.0", inclusive = false, message="Please provide a positive amount for the allocation")
+   @Digits(integer=10, fraction=2, message="Fractional part should have a maximum of 2 digits")
    private BigDecimal allocation;
    
    @ManyToOne
@@ -88,13 +91,15 @@ public class Category implements Comparable<Category> {
    public void setTransactions(Set<Transaction> transactions) {
       this.transactions = transactions;
    }
+   
+   @Override
+   public String toString() {
+	   return String.format("%s - %f\n", getName(), getAllocation());
+   }
 
    @Override
    public int compareTo(Category o) {
-      //if (this.getName() != null && o.getName() != null)
-         return this.getName().compareTo(o.getName());
-      
-      //return 0;
+       return this.getName().compareTo(o.getName());
    }  
    
    public BigDecimal getTotalSpent() {
