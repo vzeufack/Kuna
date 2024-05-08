@@ -35,30 +35,33 @@
 	</div>
 	
 	<!-- Edit category modal -->
-	<!--<div th:fragment = "edit-group-modal (id)" class="modal fade" th:id="|edit-group-modal-${group.id}|">
+	<div th:fragment = "edit-category-modal (id)" class="modal fade" th:id="edit-category-modal-+${category.id}" tabindex="-1" role="dialog" aria-labelledby="editCategoryModal" aria-hidden="true">
 	  <div class="modal-dialog modal-dialog-centered">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <h5 class="modal-title bree-serif-normal">Edit Group</h5>
+	        <h5 class="modal-title bree-serif-normal">Edit category</h5>
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	          <span aria-hidden="true">&times;</span>
 	        </button>
 	      </div>
-	      <form th:id="|editGroupForm${group.id}|">
+	      <form th:id="editCategoryForm+${category.id}">
 		      <div class="modal-body">
 				 <div class="form-group">
 					<label for="name">Name</label>
-					<input type="text" class="form-control" th:value="${group.name}" name="name"/>
+					<input type="text" class="form-control" name="name" th:value="${category.name}">
 				 </div>
-		      </div>
-		      
+				 <div class="form-group">
+					<label for="allocation">Allocation</label>
+					<input type="number" step="any" class="form-control" name="allocation" placeholder="0.00" th:value="${category.allocation}">
+				 </div>
+		      </div>		      
 		      <div class="modal-footer">
-		        <button th:id="|edit-group-btn-${group.id}|" class="btn btn-primary col-md-3 ml-auto">Submit</button>
+		        <button th:id="|edit-category-btn-${group.id}-${category.id}|" class="btn btn-primary col-md-3 ml-auto">Submit</button>
 		      </div>
 	      </form>
 	    </div>
-	  </div>  
-	</div>-->
+	  </div>
+	</div>
 	
 	<!-- Delete category modal -->
 	<!--<div th:fragment = "delete-group-modal (id)" class="modal fade" th:id="|delete-group-modal-${group.id}|">

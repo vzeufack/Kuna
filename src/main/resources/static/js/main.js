@@ -148,4 +148,29 @@ $(function () {
             }
         })
     });
+    
+    $("button[id*='edit-category-btn']").click(function (e) {
+        e.preventDefault();
+        var splitted_id = $(this).prop('id').split('-');
+        var group_id = splitted_id[3];
+        var category_id = splitted_id[4];
+        var edit_category_url = '/budget/' + budget_id + '/group/' + group_id + '/category/edit/' + category_id;
+        var form_id = '#editCategoryForm' + category_id;
+        
+        $('input').next('div').remove();
+	    
+        $.post({
+            url: edit_category_url,
+            data: $(form_id).serialize(),
+            success: function (res) {
+                if (res.validated) {
+					location.reload();
+                } else {
+                    $.each(res.errorMessages, function (key, value) {
+                        $('input[name=' + key + ']').after('<div class="alert alert-warning text-center mt-1 mb-0">' + value + '</div>');
+                    });
+                }
+            }
+        })
+    });
 });

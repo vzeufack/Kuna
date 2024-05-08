@@ -37,7 +37,6 @@ public class CategoryController {
    @Autowired
    private BudgetService budgetService;
    
-   
    @PostMapping(value = "create")
    @ResponseBody
    public GroupResponse createCategory(@ModelAttribute @Valid Category category, BindingResult result, @PathVariable Long budgetId, @PathVariable Long groupId) {	   
@@ -72,25 +71,25 @@ public class CategoryController {
    }
    
    @PostMapping(value = "edit/{categoryId}")
-   public String updateCategory(ModelMap model, @ModelAttribute("category") @Valid Category category, BindingResult result,
-         @PathVariable Long categoryId, @PathVariable Long groupId, @PathVariable Long budgetId) {
-      Category categoryFromDB = categoryService.findById(categoryId).get();
-      Budget budget = budgetService.findById(budgetId).get();
-      Group group = groupService.findById(groupId).get();
+   @ResponseBody
+   public GroupResponse updateCategory(@ModelAttribute @Valid Category category, BindingResult result, @PathVariable Long categoryId, @PathVariable Long groupId, @PathVariable Long budgetId) {	   
+	   GroupResponse response = new GroupResponse();
+	   
+       if (result.hasErrors()) {
+    	  Map<String, String> errors = result.getFieldErrors().stream()
+              .collect( Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
 
-      if (result.hasErrors()) {
-         category.setId(categoryId);
-         model.addAttribute("category", category);
-         model.addAttribute("budget", budget);
-         model.addAttribute("group", group);
-         return "category/edit";
-      }
-      
-      categoryFromDB.setName(category.getName());
-      categoryFromDB.setAllocation(category.getAllocation());
-      categoryService.save(categoryFromDB);
-      
-      return "redirect:/budget/view/" + budgetId;
+           response.setValidated(false);
+           response.setErrorMessages(errors);
+       } else {
+           response.setValidated(true);
+           Category categoryFromDB = categoryService.findById(categoryId).get();
+           categoryFromDB.setName(category.getName());
+           categoryFromDB.setAllocation(category.getAllocation());
+           categoryService.save(categoryFromDB);
+       }
+       
+       return response;
    }
    
    @RequestMapping("delete/{categoryId}")

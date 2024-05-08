@@ -84,16 +84,17 @@
 			    	  	  <a id="toggle-bars" data-toggle="collapse" th:href="|#collapse${category.id}|" role="button" aria-controls="|collapse${category.id}|">
 			    	  	  	<i class="fa fa-bars my-anchor">&nbsp</i>
 			    	  	  </a>
-			    	  	  <a type="button" th:href="@{/budget/{budgetId}/group/{groupId}/category/edit/{categoryId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
-			    	  	  	<span class="my-anchor" th:text="|${#strings.capitalize(#strings.toLowerCase(category.name))}|"></span>
-			    	  	  </a>			  
+			    	  	  <a type="button" data-toggle="modal" th:attr="data-target='#edit-category-modal-'+${category.id}">
+			    	  	  	<span class="my-anchor category-name" th:text="|${#strings.capitalize(#strings.toLowerCase(category.name))}|"></span>
+			    	  	  </a>
+			    	  	  <th:block th:replace="category :: edit-category-modal(id=${category.id})"></th:block>		  
 					  </div>
 					  <div class="col-sm-4 text-center"><span th:text="|${#numbers.formatCurrency(category.getRemaining)} left|"></span></div>
 					  <div class="col-sm-4 text-right"><span th:text="|${#numbers.formatCurrency(category.allocation)}|"></span></div>
 				 </div>
 				 <div class="progress">
 					<div class="progress-bar bg-info" role="progressbar"
-					  	th:style="|width: ${category.getPercentLeft()}%|" aria-valuemin="0" aria-valuemax="100"></div>
+					  	th:style="|width: ${category.getPercentSpent()}%|" aria-valuemin="0" aria-valuemax="100"></div>
 					</div>
 				</div>
 				<div class="collapse show" th:id="|collapse${category.id}|">
