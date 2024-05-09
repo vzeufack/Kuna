@@ -62,9 +62,9 @@
 	  <div class="modal-dialog modal-dialog-centered">
 	    <div class="modal-content">
 	      <form th:id="|deleteGroupForm${group.id}|">
-		      <div class="modal-body">
+		      <div class="modal-body text-center">
 		        Are you sure you want to delete <span style="font-weight:bold" th:text="${group.name}|"/> group?
-		        <p>All associated categories and transactions will be deleted!</p>
+		        <br/>All associated categories and transactions will be deleted!
 		      </div>
 		      <div class="modal-footer">
 		        <button th:id="|delete-group-btn-${group.id}|" class="btn btn-danger col-md-3 ml-auto">Delete</button>

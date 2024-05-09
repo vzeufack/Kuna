@@ -20,7 +20,7 @@
 	font-size:20px;
 }
 
-a .group-name:hover, a .category-name:hover{
+a .group-name:hover, a .category-name:hover, .text-danger{
 	text-decoration: underline;
 	cursor: pointer;
 }

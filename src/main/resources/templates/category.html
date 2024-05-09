@@ -64,21 +64,21 @@
 	</div>
 	
 	<!-- Delete category modal -->
-	<!--<div th:fragment = "delete-group-modal (id)" class="modal fade" th:id="|delete-group-modal-${group.id}|">
+	<div th:fragment = "delete-category-modal (id)" class="modal fade" th:id="|delete-category-modal-${category.id}|">
 	  <div class="modal-dialog modal-dialog-centered">
 	    <div class="modal-content">
-	      <form th:id="|deleteGroupForm${group.id}|">
-		      <div class="modal-body">
-		        Are you sure you want to delete <span style="font-weight:bold" th:text="${group.name}|"/> group?
-		        <p>All associated categories and transactions will be deleted!</p>
+	      <form th:id="|deleteCategoryForm${category.id}|">
+		      <div class="modal-body text-center">
+		        Are you sure you want to delete <span style="font-weight:bold" th:text="${category.name}|"/> category?
+		        <br/>All associated transactions will be deleted!
 		      </div>
 		      <div class="modal-footer">
-		        <button th:id="|delete-group-btn-${group.id}|" class="btn btn-danger col-md-3 ml-auto">Delete</button>
+		        <button th:id="|delete-category-btn-${group.id}-${category.id}|" class="btn btn-danger col-md-3 ml-auto">Delete</button>
 		      </div>
 		  </form>
 	    </div>
 	  </div>
-	</div>-->
+	</div>
 </body>
 
 </html>

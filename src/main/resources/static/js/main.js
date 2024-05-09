@@ -173,4 +173,20 @@ $(function () {
             }
         })
     });
+    
+    $("button[id*='delete-category-btn']").click(function (e) {
+        e.preventDefault(); 
+        var group_id = $(this).prop('id').split('-')[3];
+        var category_id = $(this).prop('id').split('-')[4];
+        var delete_category_url = '/budget/' + budget_id + '/group/' + group_id + '/category/delete/' + category_id;
+        
+        $.post({
+            url: delete_category_url,
+            data: category_id,
+            success: function (res) {
+				alert(delete_category_url);
+				location.reload();
+            }
+        })
+    });
 });

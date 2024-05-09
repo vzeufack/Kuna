@@ -109,10 +109,20 @@
 					    	</tr>
 						</tbody>
 					</table>
-					<a class="ml-1" type="button"
-					   th:href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/create (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
-				  	 	Add transaction
-				  	</a>
+					<div class="row">
+						<div class="col-sm-6 text-left">
+							 <a class="ml-1" type="button"
+							   th:href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/create (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
+						  	 	Add transaction
+						  	 </a>
+					  	 </div>
+					  	 <div class="col-sm-6 text-right">
+						  	 <a type="button" class="text-danger" data-toggle="modal" th:attr="data-target='#delete-category-modal-'+${category.id}" >
+				 				Delete category
+							 </a>
+						 </div>
+						 <th:block th:replace="category :: delete-category-modal(id=${category.id})"></th:block>
+					 </div>
 				  </div>
 				</div>
 			 </div>

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -92,9 +93,15 @@ public class CategoryController {
        return response;
    }
    
-   @RequestMapping("delete/{categoryId}")
-   public String deleteCategory(@PathVariable Long categoryId, @PathVariable Long budgetId) {
-      categoryService.delete(categoryId);
-      return "redirect:/budget/view/" + budgetId;
+   @PostMapping(value = "delete/{categoryId}")
+   public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId, @PathVariable Long budgetId) {	   
+	   try {
+		   categoryService.delete(categoryId);	       
+	    } catch (Exception e) {
+	  	  e.printStackTrace();
+	  	  return ResponseEntity.badRequest().body(categoryId);
+	    }
+		   
+	    return ResponseEntity.ok(categoryId);
    }
 }
