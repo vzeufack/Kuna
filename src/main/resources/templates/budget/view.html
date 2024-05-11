@@ -99,23 +99,32 @@
 				</div>
 				<div class="collapse show" th:id="|collapse${category.id}|">
 				  <div class="card-body">
-				    <table class="table table-hover table-striped">
-					  	<tbody>
-					  		<tr th:each="transaction: ${category.transactions}" class='clickable-row'
-					  		  th:data-href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/edit/{tranId} (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id}, tranId = ${transaction.id})}">
-						      <td th:text="${#temporals.format(transaction.date, 'YYYY-MMM-dd')}"></td>
-						      <td th:text="${#numbers.formatCurrency(transaction.amount)}"></td>
-						      <td class = "note" th:text="${transaction.note}"></td>
-					    	</tr>
-						</tbody>
-					</table>
+				  	<div class="table-responsive">
+					    <table class="table table-hover table-striped">
+						  	<tbody>
+						  		<tr th:each="transaction: ${category.transactions}" >
+							      <td th:text="${#temporals.format(transaction.date, 'YYYY-MMM-dd')}" data-toggle="modal" th:attr="data-target='#edit-transaction-modal-'+${transaction.id}"></td>
+							      <td th:text="${#numbers.formatCurrency(transaction.amount)}" data-toggle="modal" th:attr="data-target='#edit-transaction-modal-'+${transaction.id}"></td>
+							      <td class = "note" th:text="${transaction.note}" data-toggle="modal" th:attr="data-target='#edit-transaction-modal-'+${transaction.id}"></td>
+							      <td>
+							      	 <a type="button" data-toggle="modal" th:attr="data-target='#delete-transaction-modal-'+${transaction.id}">
+						 				<i class="fas fa-trash" style="color:orangered"></i>
+									 </a>
+							      </td>
+							      <th:block th:replace="transaction :: edit-transaction-modal (id = ${transaction.id})"></th:block>
+						    	  <th:block th:replace="transaction :: delete-transaction-modal (id = ${transaction.id})"></th:block>
+						    	</tr>
+							</tbody>
+						</table>
+					</div>
 					<div class="row">
 						<div class="col-sm-6 text-left">
-							 <a class="ml-1" type="button"
-							   th:href="@{/budget/{budgetId}/group/{groupId}/category/{categoryId}/transaction/create (budgetId = ${budget.id}, groupId = ${group.id}, categoryId = ${category.id})}">
+							 <a class="text-primary" type="button" data-toggle="modal" th:attr="data-target='#add-transaction-modal-'+${category.id}">
 						  	 	Add transaction
 						  	 </a>
 					  	 </div>
+					  	 <th:block th:replace="transaction :: add-transaction-modal (category_id = ${category.id})"></th:block>
+					  	 
 					  	 <div class="col-sm-6 text-right">
 						  	 <a type="button" class="text-danger" data-toggle="modal" th:attr="data-target='#delete-category-modal-'+${category.id}" >
 				 				Delete category

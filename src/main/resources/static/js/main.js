@@ -190,3 +190,72 @@ $(function () {
         })
     });
 });
+
+
+$(function () {
+	$("button[id*='create-transaction-btn']").click(function (e) {
+        e.preventDefault();
+        var group_id = $(this).prop('id').split('-')[3];
+        var category_id = $(this).prop('id').split('-')[4];
+        var create_transaction_url = '/budget/' + budget_id + '/group/' + group_id + '/category/' + category_id + '/transaction/create';
+        
+        $('input').next('div').remove();
+        form_id = '#createTransactionForm' + category_id;
+	    
+        $.post({
+            url: create_transaction_url,
+            data: $(form_id).serialize(),
+            success: function (res) {
+                if (res.validated) {
+					location.reload();
+                } else {
+                    $.each(res.errorMessages, function (key, value) {
+                        $('input[name=' + key + ']').after('<div class="alert alert-warning text-center mt-1 mb-0">' + value + '</div>');
+                    });
+                }
+            }
+        })
+    });
+    
+    $("button[id*='edit-transaction-btn']").click(function (e) {
+        e.preventDefault();
+        var splitted_id = $(this).prop('id').split('-');
+        var group_id = splitted_id[3];
+        var category_id = splitted_id[4];
+        var transaction_id = splitted_id[5];
+        var edit_transaction_url = '/budget/' + budget_id + '/group/' + group_id + '/category/' + category_id + '/transaction/edit/' + transaction_id;
+        var form_id = '#editTransactionForm' + transaction_id;
+        
+        $('input').next('div').remove();
+	    
+        $.post({
+            url: edit_transaction_url,
+            data: $(form_id).serialize(),
+            success: function (res) {
+                if (res.validated) {
+					location.reload();
+                } else {
+                    $.each(res.errorMessages, function (key, value) {
+                        $('input[name=' + key + ']').after('<div class="alert alert-warning text-center mt-1 mb-0">' + value + '</div>');
+                    });
+                }
+            }
+        })
+    });
+    
+    $("button[id*='delete-transaction-btn']").click(function (e) {
+        e.preventDefault(); 
+        var group_id = $(this).prop('id').split('-')[3];
+        var category_id = $(this).prop('id').split('-')[4];
+        var transaction_id = $(this).prop('id').split('-')[5];
+        var delete_transaction_url = '/budget/' + budget_id + '/group/' + group_id + '/category/' + category_id + '/transaction/delete/' + transaction_id;
+        
+        $.post({
+            url: delete_transaction_url,
+            data: transaction_id,
+            success: function (res) {
+				location.reload();
+            }
+        })
+    });
+});
