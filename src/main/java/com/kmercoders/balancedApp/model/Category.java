@@ -1,6 +1,7 @@
 package com.kmercoders.balancedApp.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -12,9 +13,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Category implements Comparable<Category> {   
@@ -26,10 +31,12 @@ public class Category implements Comparable<Category> {
    private String name;
    
    @NotNull(message = "Please provide an allocation for this category")
-   @Min(value = 0)
+   @DecimalMin(value = "0.0", inclusive = false, message="Please provide a positive amount for the allocation")
+   @Digits(integer=10, fraction=2, message="Fractional part should have a maximum of 2 digits")
    private BigDecimal allocation;
    
    @ManyToOne
+   @JsonIgnore
    private Group group;
    
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "category")
@@ -87,13 +94,15 @@ public class Category implements Comparable<Category> {
    public void setTransactions(Set<Transaction> transactions) {
       this.transactions = transactions;
    }
+   
+   @Override
+   public String toString() {
+	   return String.format("%s - %f\n", getName(), getAllocation());
+   }
 
    @Override
    public int compareTo(Category o) {
-      //if (this.getName() != null && o.getName() != null)
-         return this.getName().compareTo(o.getName());
-      
-      //return 0;
+       return this.getName().compareTo(o.getName());
    }  
    
    public BigDecimal getTotalSpent() {
@@ -103,6 +112,24 @@ public class Category implements Comparable<Category> {
          total = total.add(txn.getAmount());
       }
       return total;
+   }
+   
+   public BigDecimal getTotalLeft() {
+      return getAllocation().subtract(getTotalSpent());
+   }
+   
+   public double getPercentSpent() {
+	   if(getAllocation().equals(BigDecimal.ZERO))
+         return 0.0;
+      else
+         return getTotalSpent().multiply(new BigDecimal(100)).divide(getAllocation(), 10, RoundingMode.HALF_UP).doubleValue();  
+   }
+   
+   public double getPercentLeft() {
+	   if(getAllocation().equals(BigDecimal.ZERO))
+         return 0.0;
+      else
+         return getTotalLeft().multiply(new BigDecimal(100)).divide(getAllocation(), 10, RoundingMode.HALF_UP).doubleValue();  
    }
    
    public BigDecimal getRemaining() {

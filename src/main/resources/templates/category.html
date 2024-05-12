@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+</head>
+
+<body>	
+	<!-- Add category modal -->
+	<div th:fragment = "add-category-modal (group_id)" class="modal fade" th:id="add-category-modal-+${group.id}" tabindex="-1" role="dialog" aria-labelledby="addCategoryModal" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title bree-serif-normal">Add category</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <form th:id="createCategoryForm+${group.id}">
+		      <div class="modal-body">
+				 <div class="form-group">
+					<label for="name">Name</label>
+					<input type="text" class="form-control" name="name">
+				 </div>
+				 <div class="form-group">
+					<label for="allocation">Budget</label>
+					<input type="number" step="any" class="form-control" name="allocation" placeholder="0.00">
+				 </div>
+		      </div>		      
+		      <div class="modal-footer">
+		        <button th:id="create-category-btn-+${group.id}" class="btn btn-primary col-md-3 ml-auto">Submit</button>
+		      </div>
+	      </form>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- Edit category modal -->
+	<div th:fragment = "edit-category-modal (id)" class="modal fade" th:id="edit-category-modal-+${category.id}" tabindex="-1" role="dialog" aria-labelledby="editCategoryModal" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title bree-serif-normal">Edit category</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <form th:id="editCategoryForm+${category.id}">
+		      <div class="modal-body">
+				 <div class="form-group">
+					<label for="name">Name</label>
+					<input type="text" class="form-control" name="name" th:value="${category.name}">
+				 </div>
+				 <div class="form-group">
+					<label for="allocation">Budget</label>
+					<input type="number" step="any" class="form-control" name="allocation" placeholder="0.00" th:value="${category.allocation}">
+				 </div>
+		      </div>		      
+		      <div class="modal-footer">
+		        <button th:id="|edit-category-btn-${group.id}-${category.id}|" class="btn btn-primary col-md-3 ml-auto">Submit</button>
+		      </div>
+	      </form>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- Delete category modal -->
+	<div th:fragment = "delete-category-modal (id)" class="modal fade" th:id="|delete-category-modal-${category.id}|">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <form th:id="|deleteCategoryForm${category.id}|">
+		      <div class="modal-body text-center">
+		        Are you sure you want to delete <span style="font-weight:bold" th:text="${category.name}|"/> category?
+		        <br/>All associated transactions will be deleted!
+		      </div>
+		      <div class="modal-footer">
+		        <button th:id="|delete-category-btn-${group.id}-${category.id}|" class="btn btn-danger col-md-3 ml-auto">Delete</button>
+		      </div>
+		  </form>
+	    </div>
+	  </div>
+	</div>
+</body>
+
+</html>

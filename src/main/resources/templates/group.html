@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+
+<head>
+</head>
+
+<body>	
+	<!-- Add group modal -->
+	<div th:fragment = "add-group-modal" class="modal fade" id="add-group-modal" tabindex="-1" role="dialog" aria-labelledby="addGroupModal" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title bree-serif-normal">Add Group</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <form id="createGroupForm">
+		      <div class="modal-body">
+				 <div class="form-group">
+					<label for="name">Name</label>
+					<input type="text" class="form-control" name="name">
+				 </div>
+		      </div>
+		      
+		      <div class="modal-footer">
+		        <button id="create-group-btn" class="btn btn-primary col-md-3 ml-auto">Submit</button>
+		      </div>
+	      </form>
+	    </div>
+	  </div>
+	</div>
+	
+	<!-- Edit group modal -->
+	<div th:fragment = "edit-group-modal (id)" class="modal fade" th:id="|edit-group-modal-${group.id}|">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title bree-serif-normal">Edit Group</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <form th:id="|editGroupForm${group.id}|">
+		      <div class="modal-body">
+				 <div class="form-group">
+					<label for="name">Name</label>
+					<input type="text" class="form-control" th:value="${group.name}" name="name"/>
+				 </div>
+		      </div>
+		      
+		      <div class="modal-footer">
+		        <button th:id="|edit-group-btn-${group.id}|" class="btn btn-primary col-md-3 ml-auto">Submit</button>
+		      </div>
+	      </form>
+	    </div>
+	  </div>  
+	</div>
+	
+	<!-- Delete group modal -->
+	<div th:fragment = "delete-group-modal (id)" class="modal fade" th:id="|delete-group-modal-${group.id}|">
+	  <div class="modal-dialog modal-dialog-centered">
+	    <div class="modal-content">
+	      <form th:id="|deleteGroupForm${group.id}|">
+		      <div class="modal-body text-center">
+		        Are you sure you want to delete <span style="font-weight:bold" th:text="${group.name}|"/> group?
+		        <br/>All associated categories and transactions will be deleted!
+		      </div>
+		      <div class="modal-footer">
+		        <button th:id="|delete-group-btn-${group.id}|" class="btn btn-danger col-md-3 ml-auto">Delete</button>
+		      </div>
+		  </form>
+	    </div>
+	  </div>
+	</div>
+</body>
+
+</html>

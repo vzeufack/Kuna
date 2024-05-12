@@ -34,16 +34,19 @@ public class LoginController {
    }
    
    @RequestMapping(value = "/register", method = RequestMethod.POST)
-   public String postRegister (@ModelAttribute User user, ModelMap model) {  
-    if (!user.getPassword().isEmpty() && !user.getConfirmPassword().isEmpty()) {
-        if(!user.getPassword().equals(user.getConfirmPassword())) {
-            model.put("error", "Passwords don't match");    
-            return "register";
-        }
-    }
-    
-    if (user.getPassword().isEmpty() || user.getConfirmPassword().isEmpty()) {
-        model.put("error", "You must choose a password");
+   public String postRegister (@ModelAttribute User user, ModelMap model) {
+	if(user.getUsername().isEmpty()) {
+		model.put("error", "Please provide an email");    
+        return "register";
+	}
+	
+	if(user.getPassword().isEmpty()) {
+		model.put("error", "Please provide a password");
+        return "register";
+	}
+	
+    if(!user.getPassword().equals(user.getConfirmPassword())) {
+        model.put("error", "Passwords do not match! Please retype");    
         return "register";
     }
     

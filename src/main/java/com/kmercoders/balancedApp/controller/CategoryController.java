@@ -1,20 +1,27 @@
 package com.kmercoders.balancedApp.controller;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kmercoders.balancedApp.model.Budget;
 import com.kmercoders.balancedApp.model.Category;
 import com.kmercoders.balancedApp.model.Group;
+import com.kmercoders.balancedApp.response.GroupResponse;
 import com.kmercoders.balancedApp.service.BudgetService;
 import com.kmercoders.balancedApp.service.CategoryService;
 import com.kmercoders.balancedApp.service.GroupService;
@@ -31,34 +38,25 @@ public class CategoryController {
    @Autowired
    private BudgetService budgetService;
    
-   
-   @GetMapping(value = "create")
-   public String showCategoryCreationForm(ModelMap model, @PathVariable Long budgetId, @PathVariable Long groupId) {
-      Category category = new Category();
-      Budget budget = budgetService.findById(budgetId).get();
-      Group group = groupService.findById(groupId).get();
-      
-      model.put("category", category);
-      model.addAttribute("budget", budget);
-      model.addAttribute("group", group);
-      return "category/create";
-   }
-   
    @PostMapping(value = "create")
-   public String createCategory(ModelMap model, @ModelAttribute("category") @Valid Category category, BindingResult result, @PathVariable Long budgetId, @PathVariable Long groupId) {
-      Budget budget = budgetService.findById(budgetId).get();
-      Group group = groupService.findById(groupId).get();
-      
-      if (result.hasErrors()) {
-         model.addAttribute("category", category);
-         model.addAttribute("budget", budget);
-         model.addAttribute("group", group);
-         return "category/create";
-      }
-      
-      category.setGroup(group);
-      categoryService.save(category);
-      return "redirect:/budget/view/" + budgetId;
+   @ResponseBody
+   public GroupResponse createCategory(@ModelAttribute @Valid Category category, BindingResult result, @PathVariable Long budgetId, @PathVariable Long groupId) {	   
+	   GroupResponse response = new GroupResponse();
+	   
+       if (result.hasErrors()) {
+    	  Map<String, String> errors = result.getFieldErrors().stream()
+              .collect( Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+
+           response.setValidated(false);
+           response.setErrorMessages(errors);
+       } else {
+           response.setValidated(true);
+           Group group = groupService.findById(groupId).get();
+           category.setGroup(group);
+           categoryService.save(category);
+       }
+       
+       return response;
    }
    
    @GetMapping(value = "edit/{categoryId}")
@@ -74,30 +72,36 @@ public class CategoryController {
    }
    
    @PostMapping(value = "edit/{categoryId}")
-   public String updateCategory(ModelMap model, @ModelAttribute("category") @Valid Category category, BindingResult result,
-         @PathVariable Long categoryId, @PathVariable Long groupId, @PathVariable Long budgetId) {
-      Category categoryFromDB = categoryService.findById(categoryId).get();
-      Budget budget = budgetService.findById(budgetId).get();
-      Group group = groupService.findById(groupId).get();
+   @ResponseBody
+   public GroupResponse updateCategory(@ModelAttribute @Valid Category category, BindingResult result, @PathVariable Long categoryId, @PathVariable Long groupId, @PathVariable Long budgetId) {	   
+	   GroupResponse response = new GroupResponse();
+	   
+       if (result.hasErrors()) {
+    	  Map<String, String> errors = result.getFieldErrors().stream()
+              .collect( Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
 
-      if (result.hasErrors()) {
-         category.setId(categoryId);
-         model.addAttribute("category", category);
-         model.addAttribute("budget", budget);
-         model.addAttribute("group", group);
-         return "category/edit";
-      }
-      
-      categoryFromDB.setName(category.getName());
-      categoryFromDB.setAllocation(category.getAllocation());
-      categoryService.save(categoryFromDB);
-      
-      return "redirect:/budget/view/" + budgetId;
+           response.setValidated(false);
+           response.setErrorMessages(errors);
+       } else {
+           response.setValidated(true);
+           Category categoryFromDB = categoryService.findById(categoryId).get();
+           categoryFromDB.setName(category.getName());
+           categoryFromDB.setAllocation(category.getAllocation());
+           categoryService.save(categoryFromDB);
+       }
+       
+       return response;
    }
    
-   @RequestMapping("delete/{categoryId}")
-   public String deleteCategory(@PathVariable Long categoryId, @PathVariable Long budgetId) {
-      categoryService.delete(categoryId);
-      return "redirect:/budget/view/" + budgetId;
+   @PostMapping(value = "delete/{categoryId}")
+   public ResponseEntity<?> deleteCategory(@PathVariable Long categoryId, @PathVariable Long budgetId) {	   
+	   try {
+		   categoryService.delete(categoryId);	       
+	    } catch (Exception e) {
+	  	  e.printStackTrace();
+	  	  return ResponseEntity.badRequest().body(categoryId);
+	    }
+		   
+	    return ResponseEntity.ok(categoryId);
    }
 }

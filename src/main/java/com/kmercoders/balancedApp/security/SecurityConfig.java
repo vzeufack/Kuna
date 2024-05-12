@@ -24,18 +24,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
    }
     
-   /*@Override
-   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-   }*/
-    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeRequests()
-                .antMatchers("/js/*", "/css/*").permitAll()
-                .antMatchers("/register").permitAll().and()
-                //.antMatchers("/**").hasRole("USER").and()
+                .antMatchers("/js/*", "/css/*", "/fontawesome-free-5.15.3-web/*/*").permitAll()
+                .antMatchers("/register").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/**").hasRole("USER").and()
             .formLogin()
                 .loginPage("/")
                 .defaultSuccessUrl("/budget/list")

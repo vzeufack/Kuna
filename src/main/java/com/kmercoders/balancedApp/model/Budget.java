@@ -17,6 +17,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "month", "year", "user_id" }))
 public class Budget implements Comparable<Budget>{
@@ -31,17 +33,13 @@ public class Budget implements Comparable<Budget>{
    @OrderBy("id ASC")
    private Set<Group> groups = new TreeSet<>();
    
-   //@ManyToMany
-   //@JoinTable(name = "user_budget", inverseJoinColumns = @JoinColumn(name = "budget_id"), joinColumns = @JoinColumn(name = "user_id"))
-   //@JsonIgnore
-   //private Set <User> users = new TreeSet<>();
-   
    @ManyToOne
+   @JsonIgnore
    private User user;
    
    public Budget() {}
 
-   public Budget(Month month, int year, BigDecimal income) {
+   public Budget(Month month, int year) {
       this.month = month;
       this.year = year;
    }
@@ -78,13 +76,6 @@ public class Budget implements Comparable<Budget>{
        this.groups = groups;
    }
    
-   /*public Set<User> getUsers() {
-      return users;
-   }
-
-   public void setUsers(Set<User> users) {
-      this.users = users;
-   }*/
    public User getUser() {
       return user;
    }
@@ -148,6 +139,10 @@ public class Budget implements Comparable<Budget>{
    
    @Override
    public int compareTo(Budget budget) {
-       return this.id.compareTo(budget.getId());
+	   int yearComparison = this.getYear() - budget.getYear();
+	   if(yearComparison != 0)
+		   return yearComparison;
+	   else
+		   return this.getMonth().getValue() - budget.getMonth().getValue();
    }
 }

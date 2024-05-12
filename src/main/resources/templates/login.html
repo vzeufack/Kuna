@@ -1,55 +1,46 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>Login</title>
-	<th:block th:replace="fragments/header::scripts"></th:block>
-	<script type="text/javascript">
-	    $(function(){
-	        $("#registerBtn").click(function(){
-	            window.location.href = "/register";
-	        });
-	    });
-	</script>
-</head>
-<body>
-<div class="container" style = "font-weight: bold">
- 	<div class="card w-50 mx-auto" style = "margin-top: 100px;">
-	  <h2 class="card-header" style = "text-align: center;">Login</h2>
-	  
-	  <div class="card-body">
-		 <form action="" method="post">
-		    <fieldset>
-		        <!-- use param.error assuming FormLoginConfigurer#failureUrl contains the query parameter error -->
-		        <div th:if = "${param.error != null}" class="alert alert-danger">
-		            <div>
-		                Invalid Username or Password!
-		                <div th:if = "${SPRING_SECURITY_LAST_EXCEPTION != null}">
-		                  Reason: <span th:text="${SPRING_SECURITY_LAST_EXCEPTION.message}"></span>
-		                </div>
-		            </div>
-		        </div>
-		        <!-- the configured LogoutConfigurer#logoutSuccessUrl is /login?logout and contains the query param logout -->
-		        <div th:if="${param.logout != null}">
-		            <div>
-		                You have been logged out.
-		            </div>
-		        </div>
-		        <div class = "form-group">
-			        <label for="username">Username</label>
-			        <input type="text" class="form-control" th:field="${user.username}"/>
-		        </div>
-		        <div class = "form-group">
-			        <label for="password">Password</label>
-			        <input type="password" class="form-control" th:field="${user.password}"/>
-		        </div>
-		        <div style = "font-weight: bold">
-		            <button type="submit" class="btn btn-success" >Login</button>
-		            <button id = "registerBtn" type = "button" class = "btn btn-primary" style = "float: right;">Register</button>
-		        </div>
-		    </fieldset>
-		 </form>
-	  </div>	  
- </div>
- </div>
-</body>
+	<head>
+		<title>Login</title>
+		<div th:replace="fragments/header :: css"></div>
+		<link rel="stylesheet" href="/css/authentication.css"/>
+	</head>
+	<body>
+		<div class="container">
+		 	<div class="card mx-auto">
+			  <div class="card-header bree-serif">
+			  	<h2>Welcome to Nkap <i class='fas fa-coins'></i></h2>
+			  	<h5>Your personal budgeting assitant</h5>
+			  </div>
+			  <div class="card-body">
+				 <form action="" method="POST">
+			        <div th:if = "${param.error != null}" class="alert alert-danger">
+			            <div>
+			                Invalid Username or Password!
+			                <div th:if = "${SPRING_SECURITY_LAST_EXCEPTION != null}">
+			                  Reason: <span th:text="${SPRING_SECURITY_LAST_EXCEPTION.message}"></span>
+			                </div>
+			            </div>
+			        </div>
+			        <div th:if="${param.logout != null}">
+			           You have been logged out.
+			        </div>
+			        <div class = "form-group">
+				        <label for="username">Username</label>
+				        <input type="text" class="form-control" th:field="${user.username}"/>
+			        </div>
+			        <div class = "form-group">
+				        <label for="password">Password</label>
+				        <input type="password" class="form-control" th:field="${user.password}"/>
+			        </div>
+			        <div class = "form-bottom">
+			            <button type="submit" class="btn btn-primary">Login</button>
+			            <p id="register-link">Don't have an account? <a href="/register">Register</a></p>
+			        </div>
+				 </form>
+			  </div>	  
+		 	</div>
+		</div>
+		<div th:replace="fragments/header.html :: scripts"></div>
+	</body>
 </html>
