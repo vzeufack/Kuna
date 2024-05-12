@@ -22,12 +22,14 @@
 		  </ul>
 		</nav>
 		
+		
 		<nav class="navbar navbar-expand-lg bg-white border-bottom shadowed mt-1">
 		    <ul class="navbar-nav mr-auto">
 		      <li class="nav-item">
-		      	<h5 class="nav-link" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></h5>
+		      	<h5 class="nav-link" href="#" th:text="|${#strings.capitalize(#strings.toLowerCase(budget.month))} ${budget.year}|"></h5>
 		      </li>
 		    </ul>
+		    <!--
 		    <ul class="navbar-nav" id="menu">
 		      <li class="nav-item active">
 		        <a class="nav-link" href="#">Plan</a>
@@ -35,7 +37,7 @@
 		      <li class="nav-item">
 		        <a class="nav-link" th:href="@{/budget/transactions_by_payment_method/{budgetId} (budgetId = ${budget.id})}">Payment methods</a>
 		      </li>
-		    </ul>
+		    </ul>-->
 		</nav>
 		
 		<div class="row mt-4">

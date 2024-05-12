@@ -184,7 +184,6 @@ $(function () {
             url: delete_category_url,
             data: category_id,
             success: function (res) {
-				alert(delete_category_url);
 				location.reload();
             }
         })
