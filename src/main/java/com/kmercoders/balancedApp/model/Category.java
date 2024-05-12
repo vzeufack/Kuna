@@ -19,6 +19,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Category implements Comparable<Category> {   
    @Id
@@ -34,6 +36,7 @@ public class Category implements Comparable<Category> {
    private BigDecimal allocation;
    
    @ManyToOne
+   @JsonIgnore
    private Group group;
    
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "category")
