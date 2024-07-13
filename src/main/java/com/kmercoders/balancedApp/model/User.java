@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -26,13 +27,13 @@ public class User {
    private Long id;
    
    @Column(unique = true, length = 100)
+   @NotBlank(message = "Please provide an email")
    private String username;
    private String password;
    
    @Transient
    private String confirmPassword;
    
-   //@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "users")
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
    private Set<Budget> budgets = new TreeSet<>();
    

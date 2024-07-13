@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Transaction implements Comparable<Transaction> {
    @Id @GeneratedValue
@@ -27,6 +29,7 @@ public class Transaction implements Comparable<Transaction> {
    private String note;
    
    @ManyToOne
+   @JsonIgnore
    private Category category;
    
    @ManyToOne

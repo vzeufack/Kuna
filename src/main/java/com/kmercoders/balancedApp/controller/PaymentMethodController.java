@@ -1,6 +1,7 @@
 package com.kmercoders.balancedApp.controller;
 
 
+import java.util.Set;
 import java.util.TreeSet;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.kmercoders.balancedApp.model.PaymentMethod;
 import com.kmercoders.balancedApp.model.PaymentType;
+import com.kmercoders.balancedApp.model.Transaction;
 import com.kmercoders.balancedApp.model.User;
 import com.kmercoders.balancedApp.service.PaymentMethodService;
+import com.kmercoders.balancedApp.service.TransactionService;
 
 @Controller
 @RequestMapping(value = { "/paymentMethod"})
 public class PaymentMethodController {
    @Autowired
    private PaymentMethodService paymentMethodService;
+   
+   @Autowired
+   private TransactionService transactionService;
   
 
    @GetMapping(value = {"list"})
@@ -103,6 +109,10 @@ public class PaymentMethodController {
 
    @RequestMapping("delete/{paymentMethodId}")
    public String deletePaymentMethod(@PathVariable Long paymentMethodId) {
+	  Set<Transaction> transactions = paymentMethodService.findById(paymentMethodId).get().getTransactions();
+	  for(Transaction transaction: transactions) {
+		  transaction.setPaymentMethod(null);
+	  }
       paymentMethodService.delete(paymentMethodId);
       return "redirect:/paymentMethod/list";
    }
