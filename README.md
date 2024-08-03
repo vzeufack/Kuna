@@ -9,4 +9,5 @@ Personal budgeting app to keep track of expenses. The app will allow to plan, ad
 - [x] Balance Computation
 
 ## Screen capture
-![image](https://user-images.githubusercontent.com/43120988/150706362-ad7ef5af-e252-4257-8565-925c89c71809.png)
+![image](https://github.com/user-attachments/assets/2c848bdd-3d27-4989-9ec6-6eca884384a9)
+
